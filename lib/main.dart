@@ -1,4 +1,5 @@
 import 'package:bakti_karya/pages/login_page/login_page.dart';
+import 'package:bakti_karya/pages/register_page/register_page.dart';
 import 'package:bakti_karya/pages/splashscreen_page/splashscreen_page.dart';
 import 'package:flutter/material.dart';
 

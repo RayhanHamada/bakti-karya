@@ -1,3 +1,4 @@
+import 'package:bakti_karya/pages/register_page/register_page.dart';
 import 'package:flutter/material.dart';
 
 class LoginForm extends StatefulWidget {
@@ -38,6 +39,15 @@ class _LoginFormState extends State<LoginForm> {
     }
 
     return null;
+  }
+
+  void _navigateToRegisterPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RegisterPage(),
+      ),
+    );
   }
 
   @override
@@ -129,7 +139,9 @@ class _LoginFormState extends State<LoginForm> {
               width: double.infinity,
               child: OutlinedButton(
                 child: Text('Register'),
-                onPressed: () {},
+                onPressed: () {
+                  _navigateToRegisterPage(context);
+                },
               ),
             ),
           ],
