@@ -1,5 +1,5 @@
-import 'package:bakti_karya/pages/page_login.dart';
-import 'package:bakti_karya/pages/page_splashscreen.dart';
+import 'package:bakti_karya/pages/login_page/login_page.dart';
+import 'package:bakti_karya/pages/splashscreen_page/splashscreen_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {

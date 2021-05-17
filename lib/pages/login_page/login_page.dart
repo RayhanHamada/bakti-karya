@@ -1,4 +1,4 @@
-import 'package:bakti_karya/components/login_form.dart';
+import 'package:bakti_karya/pages/login_page/login_form.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
