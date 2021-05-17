@@ -1,16 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-class SplashScreenPage extends StatefulWidget {
-  @override
-  _SplashScreenPageState createState() => _SplashScreenPageState();
-}
-
-class _SplashScreenPageState extends State<SplashScreenPage> {
-  void initState() {
-    super.initState();
-  }
-
+class SplashScreenPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,10 +25,18 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   'Bakti Karya',
-                  style: GoogleFonts.roboto(
-                    fontSize: 32,
+                  style: TextStyle(
+                    fontSize: 48,
                     color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
+              ),
+              Spacer(),
+              Text(
+                'Version 1.0.0',
+                style: TextStyle(
+                  color: Colors.white,
                 ),
               ),
             ],
