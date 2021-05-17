@@ -1,10 +1,40 @@
+import 'dart:async';
+
+import 'package:bakti_karya/pages/login_page/login_page.dart';
 import 'package:flutter/material.dart';
 
-class SplashScreenPage extends StatelessWidget {
+class SplashScreenPage extends StatefulWidget {
+  @override
+  _SplashScreenPageState createState() => _SplashScreenPageState();
+}
+
+class _SplashScreenPageState extends State<SplashScreenPage> {
+  @override
+  void initState() {
+    super.initState();
+    startTime();
+  }
+
+  startTime() {
+    return Timer(
+      const Duration(
+        seconds: 3,
+      ),
+      () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoginPage(),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.white,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.only(top: 100.0),
@@ -27,7 +57,7 @@ class SplashScreenPage extends StatelessWidget {
                   'Bakti Karya',
                   style: TextStyle(
                     fontSize: 48,
-                    color: Colors.white,
+                    color: Colors.blue,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -36,7 +66,7 @@ class SplashScreenPage extends StatelessWidget {
               Text(
                 'Version 1.0.0',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.blue,
                 ),
               ),
             ],
