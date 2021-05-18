@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'Bakti Karya',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         backgroundColor: Colors.blue,
         outlinedButtonTheme: OutlinedButtonThemeData(

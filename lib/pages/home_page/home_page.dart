@@ -1,3 +1,4 @@
+import 'package:bakti_karya/components/CustomDrawer.dart';
 import 'package:bakti_karya/pages/settings_page/settings_page.dart';
 import 'package:flutter/material.dart';
 
@@ -40,12 +41,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      drawer: Drawer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [],
-        ),
-      ),
+      drawer: CustomDrawer(),
       body: Container(),
     );
   }
