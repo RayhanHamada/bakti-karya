@@ -46,31 +46,7 @@ class _HomePageState extends State<HomePage> {
           children: [],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            label: 'Home',
-            icon: Icon(
-              Icons.home_outlined,
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: 'Shop',
-            icon: Icon(
-              Icons.shopping_cart,
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: 'Settings',
-            icon: Icon(
-              Icons.settings,
-            ),
-          ),
-        ],
-        backgroundColor: Colors.blue,
-      ),
       body: Container(),
-      backgroundColor: Colors.white,
     );
   }
 }
