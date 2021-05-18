@@ -6,6 +6,10 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  void _navigateToHome() {
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,25 +18,38 @@ class _SettingsPageState extends State<SettingsPage> {
           icon: Icon(
             Icons.arrow_back_ios,
           ),
-          onPressed: () {},
+          onPressed: _navigateToHome,
         ),
-        title: Text('Settings'),
+        title: Text(
+          'Settings',
+        ),
       ),
       body: ListView(
         children: [
           ListTile(
-            title: Text('Appearance'),
-            leading: Icon(Icons.format_paint_outlined),
+            title: Text(
+              'Appearance',
+            ),
+            leading: Icon(
+              Icons.format_paint_outlined,
+            ),
+            trailing: Icon(
+              Icons.arrow_forward_ios_outlined,
+            ),
+            onTap: () {},
           ),
           Divider(
-            thickness: 2.0,
+            thickness: 1.5,
           ),
           ListTile(
             title: Text('Logout'),
-            leading: Icon(Icons.logout),
+            leading: Icon(
+              Icons.logout,
+            ),
+            onTap: () {},
           ),
           Divider(
-            thickness: 2.0,
+            thickness: 1.5,
           ),
         ],
       ),
