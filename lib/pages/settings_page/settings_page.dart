@@ -10,6 +10,30 @@ class _SettingsPageState extends State<SettingsPage> {
     Navigator.pop(context);
   }
 
+  void _logout() async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Logout'),
+        content: Text('Are you sure ?'),
+        actions: [
+          TextButton(
+            child: Text('Yes'),
+            onPressed: () {
+              // TODO: make logout with firebase
+            },
+          ),
+          TextButton(
+            child: Text('No'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +70,7 @@ class _SettingsPageState extends State<SettingsPage> {
             leading: Icon(
               Icons.logout,
             ),
-            onTap: () {},
+            onTap: _logout,
           ),
           Divider(
             thickness: 1.5,
