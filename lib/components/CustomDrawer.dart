@@ -1,5 +1,6 @@
 import 'package:bakti_karya/pages/me_page/me_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 
 class CustomDrawer extends StatefulWidget {
   @override
@@ -23,56 +24,117 @@ class _CustomDrawerState extends State<CustomDrawer> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _buildDrawerHeader(),
-          ListTile(
-            title: Text(
-              'Home',
+          Flexible(
+            child: ListView(
+              children: [
+                ListTile(
+                  title: Text(
+                    'Home',
+                  ),
+                  leading: Icon(
+                    Icons.home,
+                    color: Colors.green,
+                  ),
+                  onTap: () {},
+                ),
+                Divider(
+                  thickness: 1.5,
+                ),
+                ExpansionTile(
+                  title: Text(
+                    'Store',
+                  ),
+                  leading: Icon(
+                    Icons.store,
+                    color: Colors.green,
+                  ),
+                  children: [
+                    ListTile(
+                      title: Text(
+                        'All',
+                      ),
+                      leading: Icon(
+                        Icons.food_bank,
+                        color: Colors.green,
+                      ),
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Daging',
+                      ),
+                      leading: Icon(
+                        MaterialCommunityIcons.sausage,
+                        color: Colors.green,
+                      ),
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Sayur',
+                      ),
+                      leading: Icon(
+                        MaterialCommunityIcons.leaf_maple,
+                        color: Colors.green,
+                      ),
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Buah',
+                      ),
+                      leading: Icon(
+                        MaterialCommunityIcons.apple,
+                        color: Colors.green,
+                      ),
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Rempah',
+                      ),
+                      leading: Icon(
+                        MaterialCommunityIcons.pot_mix,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ]
+                      .map(
+                        (e) => Padding(
+                          padding: const EdgeInsets.only(
+                            left: 20.0,
+                          ),
+                          child: e,
+                        ),
+                      )
+                      .toList(),
+                ),
+                Divider(
+                  thickness: 1.5,
+                ),
+                ListTile(
+                  title: Text(
+                    'Profil',
+                  ),
+                  leading: Icon(
+                    Icons.person,
+                    color: Colors.green,
+                  ),
+                  onTap: _navigateToProfilePage,
+                ),
+                Divider(
+                  thickness: 1.5,
+                ),
+                // Spacer(),
+                ListTile(
+                  title: Text(
+                    'Logout',
+                  ),
+                  leading: Icon(
+                    Icons.logout,
+                    color: Colors.green,
+                  ),
+                  onTap: () {},
+                ),
+              ],
             ),
-            leading: Icon(
-              Icons.home,
-              color: Colors.green,
-            ),
-            onTap: () {},
-          ),
-          Divider(
-            thickness: 1.5,
-          ),
-          ListTile(
-            title: Text(
-              'Store',
-            ),
-            leading: Icon(
-              Icons.store,
-              color: Colors.green,
-            ),
-            onTap: () {},
-          ),
-          Divider(
-            thickness: 1.5,
-          ),
-          ListTile(
-            title: Text(
-              'Profil',
-            ),
-            leading: Icon(
-              Icons.person,
-              color: Colors.green,
-            ),
-            onTap: _navigateToProfilePage,
-          ),
-          Divider(
-            thickness: 1.5,
-          ),
-          Spacer(),
-          ListTile(
-            title: Text(
-              'Logout',
-            ),
-            leading: Icon(
-              Icons.logout,
-              color: Colors.green,
-            ),
-            onTap: () {},
-          ),
+          )
         ],
       ),
     );
