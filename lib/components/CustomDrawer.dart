@@ -17,6 +17,31 @@ class _CustomDrawerState extends State<CustomDrawer> {
     );
   }
 
+  void _logout() async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Logout'),
+        content: Text('Are you sure ?'),
+        actions: [
+          TextButton(
+            child: Text('Yes'),
+            onPressed: () {
+              // TODO: make logout with firebase
+              // TODO: on firebase logout success go to login page
+            },
+          ),
+          TextButton(
+            child: Text('No'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -121,7 +146,19 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 Divider(
                   thickness: 1.5,
                 ),
-                // Spacer(),
+                ListTile(
+                  title: Text(
+                    'Riwayat Transaksi',
+                  ),
+                  leading: Icon(
+                    Icons.money,
+                    color: Colors.green,
+                  ),
+                  onTap: _navigateToProfilePage,
+                ),
+                Divider(
+                  thickness: 1.5,
+                ),
                 ListTile(
                   title: Text(
                     'Logout',
@@ -130,11 +167,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     Icons.logout,
                     color: Colors.green,
                   ),
-                  onTap: () {},
+                  onTap: _logout,
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -162,7 +199,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
               // fontWeight: FontWeight.bold,
               fontSize: 20,
               color: Colors.white,
-              overflow: TextOverflow.clip,
             ),
           ),
           Text(

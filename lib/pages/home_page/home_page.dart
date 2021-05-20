@@ -42,7 +42,11 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       drawer: CustomDrawer(),
-      body: Container(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [],
+        ),
+      ),
     );
   }
 }
