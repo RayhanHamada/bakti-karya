@@ -1,8 +1,4 @@
-import 'package:bakti_karya/pages/home_page/home_page.dart';
-import 'package:bakti_karya/pages/login_page/login_page.dart';
-import 'package:bakti_karya/pages/register_page/register_page.dart';
-import 'package:bakti_karya/pages/settings_page/settings_page.dart';
-import 'package:bakti_karya/pages/splashscreen_page/splashscreen_page.dart';
+import 'package:bakti_karya/pages/router.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -26,7 +22,8 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: HomePage(),
+      onGenerateRoute: onGenerateRoute,
+      initialRoute: '/home',
     );
   }
 }
