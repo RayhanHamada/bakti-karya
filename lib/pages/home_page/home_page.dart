@@ -1,3 +1,4 @@
+import 'package:bakti_karya/utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -19,6 +20,14 @@ class _HomePageState extends State<HomePage> {
 
   void _navigateToMePage(BuildContext context) {
     Navigator.pushNamed(context, '/me');
+  }
+
+  void _navigateToProductListPage(
+      BuildContext context, KategoriProduk kategoriProduk) {
+    Navigator.pushNamed(context, '/productlist', arguments: <String, dynamic>{
+      'kategoriProduk': kategoriProduk,
+      'isPromo': false,
+    });
   }
 
   void _logout(BuildContext context) async {
@@ -331,14 +340,35 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.only(
                 top: 30.0,
               ),
-              child: Center(
-                child: Text(
-                  'Katalog',
-                  style: TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22.0,
-                  ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Katalog',
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22.0,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: Row(
+                        children: [
+                          Text(
+                            'See All',
+                            style: TextStyle(color: Colors.green),
+                          ),
+                          Icon(
+                            Icons.keyboard_arrow_right_outlined,
+                            color: Colors.green,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -374,7 +404,10 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
-                          onTap: () {},
+                          onTap: () => _navigateToProductListPage(
+                            context,
+                            KategoriProduk.Daging,
+                          ),
                         ),
                       ),
                     ),
@@ -401,7 +434,10 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
-                          onTap: () {},
+                          onTap: () => _navigateToProductListPage(
+                            context,
+                            KategoriProduk.Sayur,
+                          ),
                         ),
                       ),
                     ),
@@ -428,7 +464,10 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
-                          onTap: () {},
+                          onTap: () => _navigateToProductListPage(
+                            context,
+                            KategoriProduk.Buah,
+                          ),
                         ),
                       ),
                     ),
@@ -455,7 +494,10 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
-                          onTap: () {},
+                          onTap: () => _navigateToProductListPage(
+                            context,
+                            KategoriProduk.Rempah,
+                          ),
                         ),
                       ),
                     ),
