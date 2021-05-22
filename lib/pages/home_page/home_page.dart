@@ -141,7 +141,10 @@ class _HomePageState extends State<HomePage> {
                         Icons.food_bank,
                         color: Colors.green,
                       ),
-                      onTap: () {},
+                      onTap: () => _navigateToProductListPage(
+                        context,
+                        KategoriProduk.All,
+                      ),
                     ),
                     ListTile(
                       title: Text(
@@ -151,7 +154,10 @@ class _HomePageState extends State<HomePage> {
                         MaterialCommunityIcons.sausage,
                         color: Colors.green,
                       ),
-                      onTap: () {},
+                      onTap: () => _navigateToProductListPage(
+                        context,
+                        KategoriProduk.Daging,
+                      ),
                     ),
                     ListTile(
                       title: Text(
@@ -161,7 +167,10 @@ class _HomePageState extends State<HomePage> {
                         MaterialCommunityIcons.leaf_maple,
                         color: Colors.green,
                       ),
-                      onTap: () {},
+                      onTap: () => _navigateToProductListPage(
+                        context,
+                        KategoriProduk.Sayur,
+                      ),
                     ),
                     ListTile(
                       title: Text(
@@ -171,7 +180,10 @@ class _HomePageState extends State<HomePage> {
                         MaterialCommunityIcons.apple,
                         color: Colors.green,
                       ),
-                      onTap: () {},
+                      onTap: () => _navigateToProductListPage(
+                        context,
+                        KategoriProduk.Buah,
+                      ),
                     ),
                     ListTile(
                       title: Text(
@@ -181,7 +193,10 @@ class _HomePageState extends State<HomePage> {
                         MaterialCommunityIcons.pot_mix,
                         color: Colors.green,
                       ),
-                      onTap: () {},
+                      onTap: () => _navigateToProductListPage(
+                        context,
+                        KategoriProduk.Rempah,
+                      ),
                     ),
                     ListTile(
                       title: Text(
@@ -191,7 +206,10 @@ class _HomePageState extends State<HomePage> {
                         MaterialCommunityIcons.food_fork_drink,
                         color: Colors.green,
                       ),
-                      onTap: () {},
+                      onTap: () => _navigateToProductListPage(
+                        context,
+                        KategoriProduk.Resep,
+                      ),
                     ),
                   ]
                       .map(
