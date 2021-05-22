@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _navigateToProductListPage(
-      BuildContext context, KategoriProduk kategoriProduk) {
+      BuildContext context, KategoriProductListPage kategoriProduk) {
     Navigator.pushNamed(context, '/productlist', arguments: <String, dynamic>{
       'kategoriProduk': kategoriProduk,
       'isPromo': false,
@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       onTap: () => _navigateToProductListPage(
                         context,
-                        KategoriProduk.All,
+                        KategoriProductListPage.All,
                       ),
                     ),
                     ListTile(
@@ -156,7 +156,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       onTap: () => _navigateToProductListPage(
                         context,
-                        KategoriProduk.Daging,
+                        KategoriProductListPage.Daging,
                       ),
                     ),
                     ListTile(
@@ -169,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       onTap: () => _navigateToProductListPage(
                         context,
-                        KategoriProduk.Sayur,
+                        KategoriProductListPage.Sayur,
                       ),
                     ),
                     ListTile(
@@ -182,7 +182,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       onTap: () => _navigateToProductListPage(
                         context,
-                        KategoriProduk.Buah,
+                        KategoriProductListPage.Buah,
                       ),
                     ),
                     ListTile(
@@ -195,7 +195,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       onTap: () => _navigateToProductListPage(
                         context,
-                        KategoriProduk.Rempah,
+                        KategoriProductListPage.Rempah,
                       ),
                     ),
                     ListTile(
@@ -208,7 +208,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       onTap: () => _navigateToProductListPage(
                         context,
-                        KategoriProduk.Resep,
+                        KategoriProductListPage.Resep,
                       ),
                     ),
                   ]
@@ -424,7 +424,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           onTap: () => _navigateToProductListPage(
                             context,
-                            KategoriProduk.Daging,
+                            KategoriProductListPage.Daging,
                           ),
                         ),
                       ),
@@ -454,7 +454,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           onTap: () => _navigateToProductListPage(
                             context,
-                            KategoriProduk.Sayur,
+                            KategoriProductListPage.Sayur,
                           ),
                         ),
                       ),
@@ -484,7 +484,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           onTap: () => _navigateToProductListPage(
                             context,
-                            KategoriProduk.Buah,
+                            KategoriProductListPage.Buah,
                           ),
                         ),
                       ),
@@ -514,7 +514,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           onTap: () => _navigateToProductListPage(
                             context,
-                            KategoriProduk.Rempah,
+                            KategoriProductListPage.Rempah,
                           ),
                         ),
                       ),

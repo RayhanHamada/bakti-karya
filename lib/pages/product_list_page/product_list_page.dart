@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
 class ProductListPage extends StatefulWidget {
-  const ProductListPage({@required this.initialKategoriProduk});
+  const ProductListPage({@required this.initialKategoriProductListPage});
 
-  final KategoriProduk initialKategoriProduk;
+  final KategoriProductListPage initialKategoriProductListPage;
 
   @override
   _ProductListPageState createState() =>
-      _ProductListPageState(kategoriProduk: initialKategoriProduk);
+      _ProductListPageState(kategoriProduk: initialKategoriProductListPage);
 }
 
 class _ProductListPageState extends State<ProductListPage>
     with TickerProviderStateMixin {
   _ProductListPageState({this.kategoriProduk});
 
-  KategoriProduk kategoriProduk;
+  KategoriProductListPage kategoriProduk;
 
   TabController _tabController;
 

@@ -31,9 +31,10 @@ Route onGenerateRoute(RouteSettings settings) {
       );
     case '/productlist':
       var args = (settings.arguments as Map<String, dynamic>);
-      var kategoriProduk = args['kategoriProduk'] as KategoriProduk;
+      var kategoriProduk = args['kategoriProduk'] as KategoriProductListPage;
       return MaterialPageRoute(
-        builder: (_) => ProductListPage(initialKategoriProduk: kategoriProduk),
+        builder: (_) =>
+            ProductListPage(initialKategoriProductListPage: kategoriProduk),
       );
     default:
       return null;
