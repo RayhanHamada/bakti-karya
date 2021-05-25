@@ -16,8 +16,8 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  String _validateEmail(String email) {
-    if (email.isEmpty || email == null) {
+  String? _validateEmail(String? email) {
+    if (email!.isEmpty) {
       return 'Email cannot be empty';
     }
 
@@ -32,8 +32,8 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
-  String _validatePassword(String password) {
-    if (password.isEmpty || password == null) {
+  String? _validatePassword(String? password) {
+    if (password!.isEmpty) {
       return 'Password cannot be empty';
     }
 

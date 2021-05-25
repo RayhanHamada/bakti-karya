@@ -11,7 +11,7 @@ enum KategoriProductListPage {
 }
 
 /// untuk index tabview di page [ProductListPage]
-int kategoriToInt(KategoriProductListPage kategoriProduk) {
+int? kategoriToInt(KategoriProductListPage kategoriProduk) {
   return <KategoriProductListPage, int>{
     KategoriProductListPage.All: 0,
     KategoriProductListPage.Daging: 1,

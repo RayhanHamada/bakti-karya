@@ -7,16 +7,16 @@ enum KategoriProduct {
 }
 
 class Product {
-  final KategoriProduct kategoriProduct;
+  final KategoriProduct? kategoriProduct;
   final String nama, photoName, deskripsi;
   final int harga;
 
   Product({
-    this.nama,
-    this.kategoriProduct,
-    this.deskripsi,
-    this.photoName,
-    this.harga,
+    required this.nama,
+    required this.kategoriProduct,
+    required this.deskripsi,
+    required this.photoName,
+    required this.harga,
   });
 
   factory Product.fromJson(Map<String, dynamic> map) {
@@ -28,7 +28,7 @@ class Product {
         kategoriProduct: stringToKategori(map['category']));
   }
 
-  static KategoriProduct stringToKategori(String kategori) {
+  static KategoriProduct? stringToKategori(String kategori) {
     var kategoriMap = <String, KategoriProduct>{
       'daging': KategoriProduct.Daging,
       'buah': KategoriProduct.Buah,
@@ -50,13 +50,13 @@ class RecipeProduct extends Product {
   List<String> bahan, langkah;
 
   RecipeProduct({
-    String nama,
-    KategoriProduct kategoriProduct,
-    String deskripsi,
-    String photoName,
-    int harga,
-    this.bahan,
-    this.langkah,
+    required String nama,
+    KategoriProduct? kategoriProduct,
+    required String deskripsi,
+    required String photoName,
+    required int harga,
+    required this.bahan,
+    required this.langkah,
   }) : super(
           nama: nama,
           kategoriProduct: kategoriProduct,

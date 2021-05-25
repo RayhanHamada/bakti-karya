@@ -7,7 +7,7 @@ import 'package:bakti_karya/pages/splashscreen_page/splashscreen_page.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
 
-Route onGenerateRoute(RouteSettings settings) {
+Route? onGenerateRoute(RouteSettings settings) {
   switch (settings.name) {
     case '/splash':
       return MaterialPageRoute(

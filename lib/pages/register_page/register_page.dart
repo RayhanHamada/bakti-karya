@@ -20,28 +20,28 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   /// validator input field form
-  String _validateNama(String nama) {
-    if (nama.isEmpty || nama == null) {
+  String? _validateNama(String? nama) {
+    if (nama!.isEmpty) {
       return 'Nama cannot be empty';
     }
 
     return null;
   }
 
-  String _validateNoHp(String noHp) {
+  String? _validateNoHp(String? noHp) {
     return null;
   }
 
-  String _validateAlamat(String alamat) {
-    if (alamat.isEmpty || alamat == null) {
+  String? _validateAlamat(String? alamat) {
+    if (alamat!.isEmpty) {
       return 'Alamat cannot be empty';
     }
 
     return null;
   }
 
-  String _validateEmail(String email) {
-    if (email.isEmpty || email == null) {
+  String? _validateEmail(String? email) {
+    if (email!.isEmpty) {
       return 'Email cannot be empty';
     }
 
@@ -57,8 +57,8 @@ class _RegisterPageState extends State<RegisterPage> {
     return null;
   }
 
-  String _validatePassword(String password) {
-    if (password.isEmpty || password == null) {
+  String? _validatePassword(String? password) {
+    if (password!.isEmpty) {
       return 'Password cannot be empty';
     }
 
@@ -73,7 +73,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return null;
   }
 
-  String _validatePasswordConfirmation(String password) {
+  String? _validatePasswordConfirmation(String? password) {
     var _password = _passwordController.text;
 
     if (_password != password) {

@@ -1,7 +1,10 @@
 import 'package:bakti_karya/utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:fluttericon/font_awesome5_icons.dart';
+import 'package:fluttericon/font_awesome_icons.dart';
+import 'package:fluttericon/linecons_icons.dart';
+import 'package:fluttericon/rpg_awesome_icons.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -55,7 +58,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _appBar() {
+  PreferredSizeWidget _appBar() {
     return AppBar(
       title: Text('Home'),
       leading: Builder(
@@ -138,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                         'All',
                       ),
                       leading: Icon(
-                        Icons.food_bank,
+                        FontAwesome.food,
                         color: Colors.green,
                       ),
                       onTap: () => _navigateToProductListPage(
@@ -151,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                         'Daging',
                       ),
                       leading: Icon(
-                        MaterialCommunityIcons.sausage,
+                        RpgAwesome.meat,
                         color: Colors.green,
                       ),
                       onTap: () => _navigateToProductListPage(
@@ -164,7 +167,7 @@ class _HomePageState extends State<HomePage> {
                         'Sayur',
                       ),
                       leading: Icon(
-                        MaterialCommunityIcons.leaf_maple,
+                        FontAwesome5.carrot,
                         color: Colors.green,
                       ),
                       onTap: () => _navigateToProductListPage(
@@ -177,7 +180,7 @@ class _HomePageState extends State<HomePage> {
                         'Buah',
                       ),
                       leading: Icon(
-                        MaterialCommunityIcons.apple,
+                        FontAwesome5.apple_alt,
                         color: Colors.green,
                       ),
                       onTap: () => _navigateToProductListPage(
@@ -190,7 +193,7 @@ class _HomePageState extends State<HomePage> {
                         'Rempah',
                       ),
                       leading: Icon(
-                        MaterialCommunityIcons.pot_mix,
+                        RpgAwesome.bubbling_potion,
                         color: Colors.green,
                       ),
                       onTap: () => _navigateToProductListPage(
@@ -203,7 +206,7 @@ class _HomePageState extends State<HomePage> {
                         'Resep',
                       ),
                       leading: Icon(
-                        MaterialCommunityIcons.food_fork_drink,
+                        Linecons.food,
                         color: Colors.green,
                       ),
                       onTap: () => _navigateToProductListPage(
@@ -372,20 +375,22 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
-                      child: Row(
-                        children: [
-                          Text(
-                            'See All',
-                            style: TextStyle(color: Colors.green),
-                          ),
-                          Icon(
-                            Icons.keyboard_arrow_right_outlined,
-                            color: Colors.green,
-                          ),
-                        ],
-                      ),
-                    ),
+                        child: Row(
+                          children: [
+                            Text(
+                              'See All',
+                              style: TextStyle(color: Colors.green),
+                            ),
+                            Icon(
+                              Icons.keyboard_arrow_right_outlined,
+                              color: Colors.green,
+                            ),
+                          ],
+                        ),
+                        onPressed: () => _navigateToProductListPage(
+                              context,
+                              KategoriProductListPage.All,
+                            )),
                   ],
                 ),
               ),
@@ -411,7 +416,7 @@ class _HomePageState extends State<HomePage> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Icon(
-                                MaterialCommunityIcons.sausage,
+                                RpgAwesome.meat,
                                 color: Colors.white,
                               ),
                               Text(
@@ -441,7 +446,7 @@ class _HomePageState extends State<HomePage> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Icon(
-                                MaterialCommunityIcons.leaf_maple,
+                                FontAwesome5.carrot,
                                 color: Colors.white,
                               ),
                               Text(
@@ -471,7 +476,7 @@ class _HomePageState extends State<HomePage> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Icon(
-                                MaterialCommunityIcons.apple,
+                                FontAwesome5.apple_alt,
                                 color: Colors.white,
                               ),
                               Text(
@@ -501,7 +506,7 @@ class _HomePageState extends State<HomePage> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Icon(
-                                MaterialCommunityIcons.pot_mix,
+                                RpgAwesome.bubbling_potion,
                                 color: Colors.white,
                               ),
                               Text(

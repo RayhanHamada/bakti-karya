@@ -1,9 +1,12 @@
 import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:fluttericon/font_awesome5_icons.dart';
+import 'package:fluttericon/font_awesome_icons.dart';
+import 'package:fluttericon/linecons_icons.dart';
+import 'package:fluttericon/rpg_awesome_icons.dart';
 
 class ProductListPage extends StatefulWidget {
-  const ProductListPage({@required this.initialKategoriProductListPage});
+  const ProductListPage({required this.initialKategoriProductListPage});
 
   final KategoriProductListPage initialKategoriProductListPage;
 
@@ -14,17 +17,17 @@ class ProductListPage extends StatefulWidget {
 
 class _ProductListPageState extends State<ProductListPage>
     with TickerProviderStateMixin {
-  _ProductListPageState({this.kategoriProduk});
+  _ProductListPageState({required this.kategoriProduk});
 
   KategoriProductListPage kategoriProduk;
 
-  TabController _tabController;
+  TabController? _tabController;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(
-      initialIndex: kategoriToInt(kategoriProduk),
+      initialIndex: kategoriToInt(kategoriProduk)!,
       length: 5,
       vsync: this,
     );
@@ -65,9 +68,9 @@ class _ProductListPageState extends State<ProductListPage>
     );
   }
 
-  Widget _appBar() {
+  PreferredSizeWidget? _appBar() {
     return AppBar(
-      title: Text('Produk'),
+      title: Text('Katalog Produk'),
       leading: IconButton(
         icon: Icon(
           Icons.arrow_back_ios_outlined,
@@ -91,31 +94,31 @@ class _ProductListPageState extends State<ProductListPage>
           tabs: [
             Tab(
               child: Icon(
-                Icons.food_bank,
+                FontAwesome.food,
                 color: Colors.white,
               ),
             ),
             Tab(
               child: Icon(
-                MaterialCommunityIcons.sausage,
+                RpgAwesome.meat,
                 color: Colors.white,
               ),
             ),
             Tab(
               child: Icon(
-                MaterialCommunityIcons.leaf_maple,
+                FontAwesome5.carrot,
                 color: Colors.white,
               ),
             ),
             Tab(
               child: Icon(
-                MaterialCommunityIcons.apple,
+                FontAwesome5.apple_alt,
                 color: Colors.white,
               ),
             ),
             Tab(
               child: Icon(
-                MaterialCommunityIcons.pot_mix,
+                RpgAwesome.bubbling_potion,
                 color: Colors.white,
               ),
             ),
