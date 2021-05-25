@@ -44,6 +44,13 @@ class Product {
 
     return kategoriMap[kategori];
   }
+
+  // static String? kategoriEnumToString(KategoriProduct kategoriProduct) {
+  //   var kategoriMap = <KategoriProduct, String> {
+  //     KategoriProduct.Daging: 'daging',
+
+  //   }
+  // }
 }
 
 class RecipeProduct extends Product {

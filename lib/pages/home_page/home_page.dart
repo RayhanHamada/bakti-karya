@@ -211,7 +211,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       onTap: () => _navigateToProductListPage(
                         context,
-                        KategoriProductListPage.Resep,
+                        KategoriProductListPage.Paket,
                       ),
                     ),
                   ]

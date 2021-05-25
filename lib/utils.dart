@@ -7,7 +7,7 @@ enum KategoriProductListPage {
   Sayur,
   Buah,
   Rempah,
-  Resep,
+  Paket,
 }
 
 /// untuk index tabview di page [ProductListPage]
@@ -18,6 +18,6 @@ int? kategoriToInt(KategoriProductListPage kategoriProduk) {
     KategoriProductListPage.Sayur: 2,
     KategoriProductListPage.Buah: 3,
     KategoriProductListPage.Rempah: 4,
-    KategoriProductListPage.Resep: 5
+    KategoriProductListPage.Paket: 5
   }[kategoriProduk];
 }

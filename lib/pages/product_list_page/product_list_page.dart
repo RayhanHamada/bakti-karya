@@ -1,3 +1,4 @@
+import 'package:bakti_karya/pages/product_list_page/product_grid_view.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
@@ -37,6 +38,7 @@ class _ProductListPageState extends State<ProductListPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(),
+      backgroundColor: Colors.green,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
         onPressed: () {},
@@ -45,26 +47,23 @@ class _ProductListPageState extends State<ProductListPage>
           color: Colors.green,
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          Container(
-            color: Colors.green,
-          ),
-          Container(
-            color: Colors.red,
-          ),
-          Container(
-            color: Colors.yellow,
-          ),
-          Container(
-            color: Colors.blue,
-          ),
-          Container(
-            color: Colors.white,
-          ),
-        ],
-      ),
+      body: TabBarView(controller: _tabController, children: [
+        ProductGridView(
+          kategoriProductListPage: KategoriProductListPage.All,
+        ),
+        Container(
+          color: Colors.red,
+        ),
+        Container(
+          color: Colors.yellow,
+        ),
+        Container(
+          color: Colors.blue,
+        ),
+        Container(
+          color: Colors.white,
+        ),
+      ]),
     );
   }
 

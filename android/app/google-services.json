@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "751066953664",
+    "project_id": "bakti-karya",
+    "storage_bucket": "bakti-karya.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:751066953664:android:864cdeafa3eff485237a25",
+        "android_client_info": {
+          "package_name": "com.bakti_karya"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "751066953664-2qucnr84kmetg1r851ijpajihu0iog6l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4eEaXFoRUeS71aIfU-SCRu8IXVb7_fcg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "751066953664-2qucnr84kmetg1r851ijpajihu0iog6l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
