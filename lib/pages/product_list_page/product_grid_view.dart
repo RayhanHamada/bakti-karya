@@ -43,12 +43,12 @@ class _ProductGridViewState extends State<ProductGridView> {
 
   Future<List<Product>> _getProducts() async {
     List<Product> products = [];
-    // QuerySnapshot<Map<String, dynamic>> snapshot;
-    // var collection = firestore.collection('/product');
-
+    QuerySnapshot<Map<String, dynamic>> snapshot;
+    var collection = firestore.collection('/products');
+    snapshot = await collection.get();
     // /// jika user ingin mencari semua product:
     // if (kategoriProductListPage == KategoriProductListPage.All) {
-    //   snapshot = await collection.get();
+
     // }
 
     // /// jika user ingin mencari product dengan kategori tertentu
@@ -60,20 +60,32 @@ class _ProductGridViewState extends State<ProductGridView> {
     //       await collection.where({'category': stringifiedKategori}).get();
     // }
 
-    // products = snapshot.docs.map((doc) {
-    //   var docData = doc.data();
-    //   if (docData['category'] == 'paket')
-    //     return RecipeProduct.fromJson(docData);
+    print('snapshot lenght => ${snapshot.docs.length}');
+    products = snapshot.docs.map((doc) {
+      var docData = doc.data();
+      print(docData['nama']);
+      if (docData['category'] == 'paket')
+        return RecipeProduct.fromJson(docData);
 
-    //   return Product.fromJson(docData);
-    // }).toList();
+      return Product.fromJson(docData);
+    }).toList();
+    // products = [
+    //   Product(
+    //     nama: 'Daun Teh',
+    //     deskripsi: 'Waw sangat',
+    //     harga: 20000,
+    //     kategoriProduct: KategoriProduct.Rempah,
+    //     photoName: 'assets/logo.png',
+    //     promo: 0.0,
+    //   ),
+    // ];
 
-    await Future.delayed(
-      Duration(
-        seconds: 1,
-      ),
-    );
-
+    // await Future.delayed(
+    //   Duration(
+    //     seconds: 1,
+    //   ),
+    // );
+    print(products.length);
     return products;
   }
 
@@ -89,85 +101,49 @@ class _ProductGridViewState extends State<ProductGridView> {
       builder: (context, snapshot) {
         /// Jika selesai loading data
         if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            return Container(
+              child: Text(
+                'nothing here',
+              ),
+            );
+          }
+
           /// jika datanya tidak null/kosong
           if (snapshot.hasData) {
             var products = snapshot.data!;
 
-            return GridView.count(
-              crossAxisCount: 2,
-              // children: products
-              //     .map(
-              //       (p) => ProductTile(
-              //         product: p,
-              //       ),
-              //     )
-              //     .toList(),
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 5 / 8,
+              ),
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                if (products.length == 0) {
+                  return Container(
+                    child: Text(
+                      'nothing here',
+                    ),
+                  );
+                }
 
-              children: [
-                ProductTile(
-                  product: Product(
-                    nama: 'Daun Teh',
-                    deskripsi: 'Waw sangat',
-                    harga: 20000,
-                    kategoriProduct: KategoriProduct.Rempah,
-                    photoName: 'assets/logo.png',
-                  ),
-                ),
-                ProductTile(
-                  product: Product(
-                    nama: 'Daun Tehsadasdaasdasasdasdasdsad',
-                    deskripsi: 'Waw sangat',
-                    harga: 20000,
-                    kategoriProduct: KategoriProduct.Rempah,
-                    photoName: 'assets/logo.png',
-                  ),
-                ),
-                ProductTile(
-                  product: Product(
-                    nama: 'Daun Tehsadasdaasdasasdasdasdsad',
-                    deskripsi: 'Waw sangat',
-                    harga: 20000,
-                    kategoriProduct: KategoriProduct.Rempah,
-                    photoName: 'assets/logo.png',
-                  ),
-                ),
-                ProductTile(
-                  product: Product(
-                    nama: 'Daun Tehsadasdaasdasasdasdasdsad',
-                    deskripsi: 'Waw sangat',
-                    harga: 20000,
-                    kategoriProduct: KategoriProduct.Rempah,
-                    photoName: 'assets/logo.png',
-                  ),
-                ),
-                ProductTile(
-                  product: Product(
-                    nama: 'Daun Tehsadasdaasdasasdasdasdsad',
-                    deskripsi: 'Waw sangat',
-                    harga: 20000,
-                    kategoriProduct: KategoriProduct.Rempah,
-                    photoName: 'assets/logo.png',
-                  ),
-                ),
-                ProductTile(
-                  product: Product(
-                    nama: 'Daun Tehsadasdaasdasasdasdasdsad',
-                    deskripsi: 'Waw sangat',
-                    harga: 20000,
-                    kategoriProduct: KategoriProduct.Rempah,
-                    photoName: 'assets/logo.png',
-                  ),
-                ),
-                ProductTile(
-                  product: Product(
-                    nama: 'Daun Tehsadasdaasdasasdasdasdsad',
-                    deskripsi: 'Waw sangat',
-                    harga: 20000,
-                    kategoriProduct: KategoriProduct.Rempah,
-                    photoName: 'assets/logo.png',
-                  ),
-                ),
-              ],
+                return ProductTile(
+                  product: products[index],
+                );
+              },
+              // children: [
+              //   ProductTile(
+              //     product: Product(
+              //       nama: 'Daun Tehsadasdaasdasasdasdasdsad',
+              //       deskripsi: 'Waw sangat',
+              //       harga: 20000,
+              //       kategoriProduct: KategoriProduct.Rempah,
+              //       photoName: 'assets/logo.png',
+              //       promo: 0.5,
+              //     ),
+              //   ),
+              // ],
             );
           }
 

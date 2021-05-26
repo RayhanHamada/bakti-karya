@@ -47,23 +47,35 @@ class _ProductListPageState extends State<ProductListPage>
           color: Colors.green,
         ),
       ),
-      body: TabBarView(controller: _tabController, children: [
-        ProductGridView(
-          kategoriProductListPage: KategoriProductListPage.All,
-        ),
-        Container(
-          color: Colors.red,
-        ),
-        Container(
-          color: Colors.yellow,
-        ),
-        Container(
-          color: Colors.blue,
-        ),
-        Container(
-          color: Colors.white,
-        ),
-      ]),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          ProductGridView(
+            kategoriProductListPage: KategoriProductListPage.All,
+          ),
+          Container(
+            color: Colors.red,
+          ),
+          Container(
+            color: Colors.yellow,
+          ),
+          Container(
+            color: Colors.blue,
+          ),
+          Container(
+            color: Colors.white,
+          ),
+        ]
+            .map(
+              (e) => Padding(
+                padding: const EdgeInsets.only(
+                  top: 20.0,
+                ),
+                child: e,
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 

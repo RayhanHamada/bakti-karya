@@ -375,22 +375,23 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     TextButton(
-                        child: Row(
-                          children: [
-                            Text(
-                              'See All',
-                              style: TextStyle(color: Colors.green),
-                            ),
-                            Icon(
-                              Icons.keyboard_arrow_right_outlined,
-                              color: Colors.green,
-                            ),
-                          ],
-                        ),
-                        onPressed: () => _navigateToProductListPage(
-                              context,
-                              KategoriProductListPage.All,
-                            )),
+                      child: Row(
+                        children: [
+                          Text(
+                            'See All',
+                            style: TextStyle(color: Colors.green),
+                          ),
+                          Icon(
+                            Icons.keyboard_arrow_right_outlined,
+                            color: Colors.green,
+                          ),
+                        ],
+                      ),
+                      onPressed: () => _navigateToProductListPage(
+                        context,
+                        KategoriProductListPage.All,
+                      ),
+                    ),
                   ],
                 ),
               ),

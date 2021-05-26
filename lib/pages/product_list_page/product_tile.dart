@@ -1,4 +1,6 @@
+import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/models/Product.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class ProductTile extends StatefulWidget {
@@ -26,53 +28,148 @@ class _ProductTileState extends State<ProductTile> {
     super.initState();
   }
 
+  Future<String> _fetchImageUrl() {
+    return firestorage
+        .refFromURL(
+            'gs://bakti-karya.appspot.com/app/foto_produk/${Product.kategoriToString(product.kategoriProduct!)}/${product.photoName}')
+        .getDownloadURL();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      margin: const EdgeInsets.symmetric(
-        horizontal: 8.0,
-        vertical: 10.0,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-          Radius.circular(
-            10,
-          ),
+    return GestureDetector(
+      child: Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: 8,
+          vertical: 8,
         ),
-        color: Colors.white,
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            height: 120.0,
-            width: 100.0,
-            child: Image.asset(
-              product.photoName,
-              fit: BoxFit.fitWidth,
-            ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(
+            20,
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 10.0,
-              left: 5.0,
-            ),
-            child: Text(
-              product.nama,
-              style: TextStyle(
-                color: Colors.green,
-                fontSize: 16,
+          color: Colors.white,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(
+                  20,
+                ),
+                border: Border.all(
+                  color: Colors.green,
+                  width: 0.5,
+                ),
+                color: Colors.transparent,
               ),
-              overflow: TextOverflow.fade,
-              maxLines: 2,
+              margin: EdgeInsetsDirectional.only(
+                bottom: 8,
+              ),
+              // height: MediaQuery.of(context).size.width * 0.4,
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    20,
+                  ),
+                ),
+                child: FutureBuilder<String>(
+                  future: _fetchImageUrl(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasData) {
+                        return Image.network(
+                          snapshot.data!,
+                          fit: BoxFit.cover,
+                        );
+                      }
+
+                      return Image.asset(
+                        'assets/logo.png',
+                        fit: BoxFit.cover,
+                      );
+                    }
+
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                ),
+              ),
             ),
-          ),
-          Row(
-            children: [],
-          )
-        ],
+
+            /// item yang di align agak ke kanan
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 10.0,
+                bottom: 10.0,
+              ),
+              child: Text(
+                product.nama,
+                style: TextStyle(
+                  color: Colors.green,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            if (product.promo > 0)
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 10.0,
+                  bottom: 10.0,
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      height: 30.0,
+                      width: 30.0,
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.only(
+                        right: 10.0,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            8,
+                          ),
+                        ),
+                        color: Colors.red.withOpacity(0.7),
+                      ),
+                      child: Text(
+                        '${(product.promo * 100).toInt()}%',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      'Rp. ${(product.harga - product.harga * product.promo).toInt()}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.lineThrough,
+                        color: Colors.green.withOpacity(0.5),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 10.0,
+              ),
+              child: Text(
+                'Rp. ${(product.harga - product.harga * product.promo).toInt()}',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
