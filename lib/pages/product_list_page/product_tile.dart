@@ -1,6 +1,5 @@
 import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/models/Product.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class ProductTile extends StatefulWidget {
@@ -33,6 +32,14 @@ class _ProductTileState extends State<ProductTile> {
         .refFromURL(
             'gs://bakti-karya.appspot.com/app/foto_produk/${Product.kategoriToString(product.kategoriProduct!)}/${product.photoName}')
         .getDownloadURL();
+  }
+
+  int hargaSetelahDiskon() {
+    return (product.harga - product.harga * product.promo).toInt();
+  }
+
+  int persenDiskon() {
+    return (product.promo * 100).toInt();
   }
 
   @override
@@ -98,6 +105,8 @@ class _ProductTileState extends State<ProductTile> {
               ),
             ),
 
+            Spacer(),
+
             /// item yang di align agak ke kanan
             Padding(
               padding: const EdgeInsets.only(
@@ -112,6 +121,8 @@ class _ProductTileState extends State<ProductTile> {
                 ),
               ),
             ),
+
+            /// Jika product mempunyai promo diskon, maka tampilkan diskon dan harga akhir
             if (product.promo > 0)
               Padding(
                 padding: const EdgeInsets.only(
@@ -136,7 +147,7 @@ class _ProductTileState extends State<ProductTile> {
                         color: Colors.red.withOpacity(0.7),
                       ),
                       child: Text(
-                        '${(product.promo * 100).toInt()}%',
+                        '${persenDiskon()}%',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -144,7 +155,7 @@ class _ProductTileState extends State<ProductTile> {
                       ),
                     ),
                     Text(
-                      'Rp. ${(product.harga - product.harga * product.promo).toInt()}',
+                      'Rp. ${product.harga}',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -158,6 +169,7 @@ class _ProductTileState extends State<ProductTile> {
             Padding(
               padding: const EdgeInsets.only(
                 left: 10.0,
+                bottom: 20.0,
               ),
               child: Text(
                 'Rp. ${(product.harga - product.harga * product.promo).toInt()}',
@@ -171,6 +183,9 @@ class _ProductTileState extends State<ProductTile> {
           ],
         ),
       ),
+      onTap: () {
+        print(product.nama);
+      },
     );
   }
 }

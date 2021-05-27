@@ -45,20 +45,23 @@ class _ProductGridViewState extends State<ProductGridView> {
     List<Product> products = [];
     QuerySnapshot<Map<String, dynamic>> snapshot;
     var collection = firestore.collection('/products');
-    snapshot = await collection.get();
-    // /// jika user ingin mencari semua product:
-    // if (kategoriProductListPage == KategoriProductListPage.All) {
 
-    // }
+    /// jika user ingin melihat semua product:
+    if (kategoriProductListPage == KategoriProductListPage.All) {
+      snapshot = await collection.get();
+    }
 
-    // /// jika user ingin mencari product dengan kategori tertentu
-    // else {
-    //   var stringifiedKategori =
-    //       _kategoriProductListPageToString(kategoriProductListPage);
+    /// jika user ingin melihat product kategori tertentu
+    else {
+      var stringifiedKategori =
+          _kategoriProductListPageToString(kategoriProductListPage)!;
 
-    //   snapshot =
-    //       await collection.where({'category': stringifiedKategori}).get();
-    // }
+      print('sedang di kategori: $stringifiedKategori');
+
+      snapshot = await collection
+          .where('category', isEqualTo: stringifiedKategori)
+          .get();
+    }
 
     print('snapshot lenght => ${snapshot.docs.length}');
     products = snapshot.docs.map((doc) {
@@ -69,23 +72,7 @@ class _ProductGridViewState extends State<ProductGridView> {
 
       return Product.fromJson(docData);
     }).toList();
-    // products = [
-    //   Product(
-    //     nama: 'Daun Teh',
-    //     deskripsi: 'Waw sangat',
-    //     harga: 20000,
-    //     kategoriProduct: KategoriProduct.Rempah,
-    //     photoName: 'assets/logo.png',
-    //     promo: 0.0,
-    //   ),
-    // ];
 
-    // await Future.delayed(
-    //   Duration(
-    //     seconds: 1,
-    //   ),
-    // );
-    print(products.length);
     return products;
   }
 
@@ -102,6 +89,7 @@ class _ProductGridViewState extends State<ProductGridView> {
         /// Jika selesai loading data
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
+            print(snapshot.error);
             return Container(
               child: Text(
                 'nothing here',
@@ -116,7 +104,7 @@ class _ProductGridViewState extends State<ProductGridView> {
             return GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 5 / 8,
+                childAspectRatio: 5 / 9,
               ),
               itemCount: products.length,
               itemBuilder: (context, index) {

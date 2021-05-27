@@ -63,7 +63,7 @@ class Product {
 }
 
 class RecipeProduct extends Product {
-  List<String> bahan;
+  List<String> bahan = [], langkah = [];
 
   RecipeProduct({
     required String nama,
@@ -72,8 +72,6 @@ class RecipeProduct extends Product {
     required String photoName,
     required num harga,
     required num promo,
-    required this.bahan,
-    // required this.langkah,
   }) : super(
           nama: nama,
           kategoriProduct: kategoriProduct,
@@ -90,7 +88,6 @@ class RecipeProduct extends Product {
       harga: map['harga'],
       photoName: map['photo_name'],
       kategoriProduct: Product.stringToKategori(map['category']),
-      bahan: List.from(map['bahan']),
       promo: map['promo'],
     );
   }

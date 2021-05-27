@@ -3,7 +3,6 @@ import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:fluttericon/font_awesome_icons.dart';
-import 'package:fluttericon/linecons_icons.dart';
 import 'package:fluttericon/rpg_awesome_icons.dart';
 
 class ProductListPage extends StatefulWidget {
@@ -53,17 +52,17 @@ class _ProductListPageState extends State<ProductListPage>
           ProductGridView(
             kategoriProductListPage: KategoriProductListPage.All,
           ),
-          Container(
-            color: Colors.red,
+          ProductGridView(
+            kategoriProductListPage: KategoriProductListPage.Daging,
           ),
-          Container(
-            color: Colors.yellow,
+          ProductGridView(
+            kategoriProductListPage: KategoriProductListPage.Sayur,
           ),
-          Container(
-            color: Colors.blue,
+          ProductGridView(
+            kategoriProductListPage: KategoriProductListPage.Buah,
           ),
-          Container(
-            color: Colors.white,
+          ProductGridView(
+            kategoriProductListPage: KategoriProductListPage.Rempah,
           ),
         ]
             .map(
