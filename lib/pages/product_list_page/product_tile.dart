@@ -166,13 +166,17 @@ class _ProductTileState extends State<ProductTile> {
                   ],
                 ),
               ),
+            if (product.promo == 0.0)
+              SizedBox(
+                height: 40,
+              ),
             Padding(
               padding: const EdgeInsets.only(
                 left: 10.0,
                 bottom: 20.0,
               ),
               child: Text(
-                'Rp. ${(product.harga - product.harga * product.promo).toInt()}',
+                'Rp. ${hargaSetelahDiskon()}',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
