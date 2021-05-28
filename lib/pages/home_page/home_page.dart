@@ -1,3 +1,4 @@
+import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -26,10 +27,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _navigateToProductListPage(
-      BuildContext context, KategoriProductListPage kategoriProduk) {
+    BuildContext context,
+    KategoriProductListPage kategoriProduk,
+  ) {
     Navigator.pushNamed(context, '/productlist', arguments: <String, dynamic>{
       'kategoriProduk': kategoriProduk,
-      'isPromo': false,
     });
   }
 
@@ -56,6 +58,32 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  Future<List<String>> _getPromoBanner() async {
+    var bannerList = List<String>.from([]);
+
+    var collection = await firestore.collection('/promo_banners').get();
+
+    collection.docs.forEach((doc) {
+      var data = doc.data();
+      bannerList.add(data['url']);
+    });
+
+    return bannerList;
+  }
+
+  Future<List<String>> _getResepBanner() async {
+    var bannerList = List<String>.from([]);
+
+    var collection = await firestore.collection('/resep_banners').get();
+
+    collection.docs.forEach((doc) {
+      var data = doc.data();
+      bannerList.add(data['url']);
+    });
+
+    return bannerList;
   }
 
   PreferredSizeWidget _appBar() {
@@ -315,45 +343,84 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            CarouselSlider(
-              items: [1, 2, 3, 4, 5].map((i) {
-                return Builder(
-                  builder: (BuildContext context) {
+            FutureBuilder<List<String>>(
+              future: _getPromoBanner(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasError) {
                     return Container(
                       width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.symmetric(
-                        horizontal: 5.0,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        border: Border.all(
-                          color: Colors.green,
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            10.0,
-                          ),
-                        ),
-                      ),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Promo $i',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                          ),
-                        ),
-                      ),
+                      alignment: Alignment.center,
+                      child: Text('Somethings wrong'),
                     );
-                  },
+                  }
+
+                  return CarouselSlider(
+                    items: snapshot.data!.map((url) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: EdgeInsets.symmetric(
+                              horizontal: 5.0,
+                              vertical: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              border: Border.all(
+                                color: Colors.green,
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                  10.0,
+                                ),
+                              ),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                  10,
+                                ),
+                              ),
+                              child: Image.network(
+                                url,
+                                fit: BoxFit.cover,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress?.cumulativeBytesLoaded !=
+                                      loadingProgress?.expectedTotalBytes) {
+                                    return Align(
+                                      alignment: Alignment.center,
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+
+                                  return child;
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }).toList(),
+                    options: CarouselOptions(
+                      autoPlay: true,
+                      pauseAutoPlayOnTouch: true,
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                    ),
+                  );
+                }
+
+                return Center(
+                  child: Container(
+                    width: 70,
+                    height: 70,
+                    child: CircularProgressIndicator(
+                      color: Colors.blue,
+                    ),
+                  ),
                 );
-              }).toList(),
-              options: CarouselOptions(
-                autoPlay: true,
-                pauseAutoPlayOnTouch: true,
-                autoPlayCurve: Curves.fastOutSlowIn,
-              ),
+              },
             ),
 
             /// Section Katalog
@@ -409,6 +476,11 @@ class _HomePageState extends State<HomePage> {
                       height: 70,
                       width: 70,
                       child: Material(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            20,
+                          ),
+                        ),
                         color: Colors.green,
                         child: InkWell(
                           splashColor: Colors.white,
@@ -439,6 +511,11 @@ class _HomePageState extends State<HomePage> {
                       height: 70,
                       width: 70,
                       child: Material(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            20,
+                          ),
+                        ),
                         color: Colors.green,
                         child: InkWell(
                           splashColor: Colors.white,
@@ -469,6 +546,11 @@ class _HomePageState extends State<HomePage> {
                       height: 70,
                       width: 70,
                       child: Material(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            20,
+                          ),
+                        ),
                         color: Colors.green,
                         child: InkWell(
                           splashColor: Colors.white,
@@ -499,6 +581,11 @@ class _HomePageState extends State<HomePage> {
                       height: 70,
                       width: 70,
                       child: Material(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            20,
+                          ),
+                        ),
                         color: Colors.green,
                         child: InkWell(
                           splashColor: Colors.white,
@@ -581,45 +668,84 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            CarouselSlider(
-              items: [1, 2, 3, 4, 5].map((i) {
-                return Builder(
-                  builder: (BuildContext context) {
+            FutureBuilder<List<String>>(
+              future: _getResepBanner(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasError) {
                     return Container(
                       width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.symmetric(
-                        horizontal: 5.0,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        border: Border.all(
-                          color: Colors.green,
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            10.0,
-                          ),
-                        ),
-                      ),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Resep $i',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                          ),
-                        ),
-                      ),
+                      alignment: Alignment.center,
+                      child: Text('Somethings wrong'),
                     );
-                  },
+                  }
+
+                  return CarouselSlider(
+                    items: snapshot.data!.map((url) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: EdgeInsets.symmetric(
+                              horizontal: 5.0,
+                              vertical: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              border: Border.all(
+                                color: Colors.green,
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                  10.0,
+                                ),
+                              ),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                  10,
+                                ),
+                              ),
+                              child: Image.network(
+                                url,
+                                fit: BoxFit.cover,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress?.cumulativeBytesLoaded !=
+                                      loadingProgress?.expectedTotalBytes) {
+                                    return Align(
+                                      alignment: Alignment.center,
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+
+                                  return child;
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }).toList(),
+                    options: CarouselOptions(
+                      autoPlay: true,
+                      pauseAutoPlayOnTouch: true,
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                    ),
+                  );
+                }
+
+                return Center(
+                  child: Container(
+                    width: 70,
+                    height: 70,
+                    child: CircularProgressIndicator(
+                      color: Colors.blue,
+                    ),
+                  ),
                 );
-              }).toList(),
-              options: CarouselOptions(
-                autoPlay: true,
-                pauseAutoPlayOnTouch: true,
-                autoPlayCurve: Curves.fastOutSlowIn,
-              ),
+              },
             ),
           ],
         ),
