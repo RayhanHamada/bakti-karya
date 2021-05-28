@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
-  void _navigateToRegisterPage(BuildContext context) {
+  void _navigateToRegisterPage() {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -160,7 +160,12 @@ class _LoginPageState extends State<LoginPage> {
                         Container(
                           width: double.infinity,
                           child: ElevatedButton(
-                            child: Text('Login'),
+                            child: Text(
+                              'Login',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
                             onPressed: () {},
                           ),
                         ),
@@ -193,10 +198,13 @@ class _LoginPageState extends State<LoginPage> {
                         Container(
                           width: double.infinity,
                           child: OutlinedButton(
-                            child: Text('Register'),
-                            onPressed: () {
-                              _navigateToRegisterPage(context);
-                            },
+                            child: Text(
+                              'Register',
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                            onPressed: _navigateToRegisterPage,
                           ),
                         ),
                       ],

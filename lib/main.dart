@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: themeData,
       onGenerateRoute: onGenerateRoute,
-      initialRoute: '/home',
+      initialRoute: '/login',
     );
   }
 }

@@ -83,19 +83,37 @@ class _RegisterPageState extends State<RegisterPage> {
     return null;
   }
 
-  void _navigateToLogin(BuildContext context) {
+  void _navigateToLogin() {
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_outlined,
+            color: Colors.blue,
+          ),
+          onPressed: _navigateToLogin,
+        ),
+        title: Text(
+          'Back to Login',
+          style: TextStyle(
+            color: Colors.blue,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
+
       /// component paling atas
       body: SingleChildScrollView(
         child: Center(
           child: Padding(
             padding: const EdgeInsets.only(
-              top: 75.0,
+              top: 20.0,
             ),
             child: Column(
               children: [
@@ -252,19 +270,13 @@ class _RegisterPageState extends State<RegisterPage> {
                         Container(
                           width: double.infinity,
                           child: ElevatedButton(
-                            child: Text('Register'),
+                            child: Text(
+                              'Register',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
                             onPressed: () {},
-                          ),
-                        ),
-
-                        /// Tombol untuk kembali ke halaman login
-                        Container(
-                          width: double.infinity,
-                          child: OutlinedButton(
-                            child: Text('Back to login'),
-                            onPressed: () {
-                              _navigateToLogin(context);
-                            },
                           ),
                         ),
                       ],

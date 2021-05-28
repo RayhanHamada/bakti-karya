@@ -62,26 +62,26 @@ class _HomePageState extends State<HomePage> {
 
   Future<List<String>> _getPromoBanner() async {
     var bannerList = List<String>.from([]);
+    // * uncomment line dibawah ini (buat hemat limit kuota firebase, sudah bisa)
+    // var collection = await firestore.collection('/promo_banners').get();
 
-    var collection = await firestore.collection('/promo_banners').get();
-
-    collection.docs.forEach((doc) {
-      var data = doc.data();
-      bannerList.add(data['url']);
-    });
+    // collection.docs.forEach((doc) {
+    //   var data = doc.data();
+    //   bannerList.add(data['url']);
+    // });
 
     return bannerList;
   }
 
   Future<List<String>> _getResepBanner() async {
     var bannerList = List<String>.from([]);
+    // * uncomment line dibawah ini (buat hemat limit kuota firebase, sudah bisa)
+    // var collection = await firestore.collection('/resep_banners').get();
 
-    var collection = await firestore.collection('/resep_banners').get();
-
-    collection.docs.forEach((doc) {
-      var data = doc.data();
-      bannerList.add(data['url']);
-    });
+    // collection.docs.forEach((doc) {
+    //   var data = doc.data();
+    //   bannerList.add(data['url']);
+    // });
 
     return bannerList;
   }
