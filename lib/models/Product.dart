@@ -8,11 +8,12 @@ enum KategoriProduct {
 
 class Product {
   final KategoriProduct? kategoriProduct;
-  final String nama, photoName, deskripsi;
+  final String id, nama, photoName, deskripsi;
   final num harga;
   final num promo;
 
   Product({
+    required this.id,
     required this.nama,
     required this.kategoriProduct,
     required this.deskripsi,
@@ -23,6 +24,7 @@ class Product {
 
   factory Product.fromJson(Map<String, dynamic> map) {
     return Product(
+      id: map['id'],
       nama: map['nama'],
       deskripsi: map['deskripsi'],
       harga: map['harga'],
@@ -66,6 +68,7 @@ class RecipeProduct extends Product {
   List<String> bahan = [], langkah = [];
 
   RecipeProduct({
+    required String id,
     required String nama,
     KategoriProduct? kategoriProduct,
     required String deskripsi,
@@ -73,6 +76,7 @@ class RecipeProduct extends Product {
     required num harga,
     required num promo,
   }) : super(
+          id: id,
           nama: nama,
           kategoriProduct: kategoriProduct,
           deskripsi: deskripsi,
@@ -83,6 +87,7 @@ class RecipeProduct extends Product {
 
   factory RecipeProduct.fromJson(Map<String, dynamic> map) {
     return RecipeProduct(
+      id: map['id'],
       nama: map['nama'],
       deskripsi: map['deskripsi'],
       harga: map['harga'],

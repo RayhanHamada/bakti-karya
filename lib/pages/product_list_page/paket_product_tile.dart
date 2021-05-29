@@ -27,10 +27,12 @@ class _PaketProductTileState extends State<PaketProductTile> {
   }
 
   Future<String> _fetchImageUrl() {
-    return firestorage
-        .refFromURL(
-            'gs://bakti-karya.appspot.com/app/foto_produk/${Product.kategoriToString(product.kategoriProduct!)}/${product.photoName}')
-        .getDownloadURL();
+    // * uncomment these line to fetch image (hemat limit kuota firebase storage)
+    // return firestorage
+    //     .refFromURL(
+    //         'gs://bakti-karya.appspot.com/app/foto_produk/${Product.kategoriToString(product.kategoriProduct!)}/${product.photoName}')
+    //     .getDownloadURL();
+    return Future.value('');
   }
 
   int hargaSetelahDiskon() {
@@ -88,7 +90,7 @@ class _PaketProductTileState extends State<PaketProductTile> {
                   future: _fetchImageUrl(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.hasData) {
+                      if (snapshot.hasData || snapshot.data != '') {
                         return FittedBox(
                           fit: BoxFit.fill,
                           child: Image.network(
