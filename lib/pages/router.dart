@@ -1,6 +1,7 @@
 import 'package:bakti_karya/pages/home_page/home_page.dart';
 import 'package:bakti_karya/pages/login_page/login_page.dart';
 import 'package:bakti_karya/pages/me_page/me_page.dart';
+import 'package:bakti_karya/pages/product_detail_page/product_detail_page.dart';
 import 'package:bakti_karya/pages/product_list_page/product_list_page.dart';
 import 'package:bakti_karya/pages/register_page/register_page.dart';
 import 'package:bakti_karya/pages/splashscreen_page/splashscreen_page.dart';
@@ -35,6 +36,11 @@ Route? onGenerateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (_) =>
             ProductListPage(initialKategoriProductListPage: kategoriProduk),
+      );
+    case '/product_detail':
+      var product = ((settings.arguments) as Map<String, dynamic>)['product'];
+      return MaterialPageRoute(
+        builder: (_) => ProductDetailPage(product: product),
       );
     default:
       return null;
