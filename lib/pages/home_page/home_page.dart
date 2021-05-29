@@ -1,4 +1,5 @@
 import 'package:bakti_karya/firebase.dart';
+import 'package:bakti_karya/theme.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -88,9 +89,16 @@ class _HomePageState extends State<HomePage> {
 
   PreferredSizeWidget _appBar() {
     return AppBar(
-      title: Text('Home'),
+      backgroundColor: Colors.white,
+      title: Text(
+        'Home',
+        style: TextStyle(
+          color: Colors.blue,
+        ),
+      ),
       leading: Builder(
         builder: (context) => IconButton(
+          color: Colors.blue,
           onPressed: () {
             Scaffold.of(context).openDrawer();
           },
@@ -110,7 +118,7 @@ class _HomePageState extends State<HomePage> {
           DrawerHeader(
             curve: Curves.bounceInOut,
             decoration: BoxDecoration(
-              color: Colors.green[400],
+              color: Colors.blue[400],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +156,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   leading: Icon(
                     Icons.home,
-                    color: Colors.green,
+                    color: Colors.blue,
                   ),
                   onTap: () {},
                 ),
@@ -161,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   leading: Icon(
                     Icons.store,
-                    color: Colors.green,
+                    color: Colors.blue,
                   ),
                   children: [
                     ListTile(
@@ -170,7 +178,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       leading: Icon(
                         FontAwesome.food,
-                        color: Colors.green,
+                        color: Colors.grey[400],
                       ),
                       onTap: () => _navigateToProductListPage(
                         context,
@@ -183,7 +191,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       leading: Icon(
                         RpgAwesome.meat,
-                        color: Colors.green,
+                        color: Colors.pink[300],
                       ),
                       onTap: () => _navigateToProductListPage(
                         context,
@@ -196,7 +204,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       leading: Icon(
                         FontAwesome5.carrot,
-                        color: Colors.green,
+                        color: Colors.orange,
                       ),
                       onTap: () => _navigateToProductListPage(
                         context,
@@ -209,7 +217,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       leading: Icon(
                         FontAwesome5.apple_alt,
-                        color: Colors.green,
+                        color: Colors.red,
                       ),
                       onTap: () => _navigateToProductListPage(
                         context,
@@ -222,7 +230,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       leading: Icon(
                         RpgAwesome.bubbling_potion,
-                        color: Colors.green,
+                        color: Colors.brown[400],
                       ),
                       onTap: () => _navigateToProductListPage(
                         context,
@@ -235,7 +243,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       leading: Icon(
                         Linecons.food,
-                        color: Colors.green,
+                        color: Colors.yellow[800],
                       ),
                       onTap: () => _navigateToProductListPage(
                         context,
@@ -262,7 +270,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   leading: Icon(
                     Icons.person,
-                    color: Colors.green,
+                    color: Colors.blue,
                   ),
                   onTap: () => _navigateToMePage(context),
                 ),
@@ -275,7 +283,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   leading: Icon(
                     Icons.money,
-                    color: Colors.green,
+                    color: Colors.blue,
                   ),
                   onTap: () => _navigateToMePage(context),
                 ),
@@ -288,7 +296,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   leading: Icon(
                     Icons.logout,
-                    color: Colors.green,
+                    color: Colors.blue,
                   ),
                   onTap: () => _logout(context),
                 ),
@@ -320,7 +328,7 @@ class _HomePageState extends State<HomePage> {
                   Text(
                     'Promo and Deals',
                     style: TextStyle(
-                      color: Colors.green,
+                      color: Colors.blue,
                       fontWeight: FontWeight.bold,
                       fontSize: 20.0,
                     ),
@@ -331,11 +339,13 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Text(
                           'See All',
-                          style: TextStyle(color: Colors.green),
+                          style: TextStyle(
+                            color: Colors.blue,
+                          ),
                         ),
                         Icon(
                           Icons.keyboard_arrow_right_outlined,
-                          color: Colors.green,
+                          color: Colors.blue,
                         ),
                       ],
                     ),
@@ -368,7 +378,7 @@ class _HomePageState extends State<HomePage> {
                             decoration: BoxDecoration(
                               color: Colors.transparent,
                               border: Border.all(
-                                color: Colors.green,
+                                color: Colors.blue,
                               ),
                               borderRadius: BorderRadius.all(
                                 Radius.circular(
@@ -436,7 +446,7 @@ class _HomePageState extends State<HomePage> {
                     Text(
                       'Katalog',
                       style: TextStyle(
-                        color: Colors.green,
+                        color: Colors.blue,
                         fontWeight: FontWeight.bold,
                         fontSize: 22.0,
                       ),
@@ -446,11 +456,13 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           Text(
                             'See All',
-                            style: TextStyle(color: Colors.green),
+                            style: TextStyle(
+                              color: Colors.blue,
+                            ),
                           ),
                           Icon(
                             Icons.keyboard_arrow_right_outlined,
-                            color: Colors.green,
+                            color: Colors.blue,
                           ),
                         ],
                       ),
@@ -475,27 +487,37 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       height: 70,
                       width: 70,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.pink,
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            20,
+                          ),
+                        ),
+                      ),
                       child: Material(
                         borderRadius: BorderRadius.all(
                           Radius.circular(
                             20,
                           ),
                         ),
-                        color: Colors.green,
+                        color: Colors.white,
                         child: InkWell(
-                          splashColor: Colors.white,
+                          splashColor: Colors.pink[300],
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Icon(
                                 RpgAwesome.meat,
-                                color: Colors.white,
+                                color: Colors.pink[300],
                               ),
                               Text(
                                 'Daging',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.pink[300],
                                 ),
                               ),
                             ],
@@ -510,27 +532,37 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       height: 70,
                       width: 70,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.orange,
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            20,
+                          ),
+                        ),
+                      ),
                       child: Material(
                         borderRadius: BorderRadius.all(
                           Radius.circular(
                             20,
                           ),
                         ),
-                        color: Colors.green,
+                        color: Colors.white,
                         child: InkWell(
-                          splashColor: Colors.white,
+                          splashColor: Colors.orange,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Icon(
                                 FontAwesome5.carrot,
-                                color: Colors.white,
+                                color: Colors.orange,
                               ),
                               Text(
                                 'Sayur',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.orange,
                                 ),
                               ),
                             ],
@@ -545,13 +577,23 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       height: 70,
                       width: 70,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.red,
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            20,
+                          ),
+                        ),
+                      ),
                       child: Material(
                         borderRadius: BorderRadius.all(
                           Radius.circular(
                             20,
                           ),
                         ),
-                        color: Colors.green,
+                        color: Colors.white,
                         child: InkWell(
                           splashColor: Colors.white,
                           child: Column(
@@ -560,12 +602,12 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Icon(
                                 FontAwesome5.apple_alt,
-                                color: Colors.white,
+                                color: Colors.red,
                               ),
                               Text(
                                 'Buah',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.red,
                                 ),
                               ),
                             ],
@@ -580,27 +622,37 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       height: 70,
                       width: 70,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.brown,
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            20,
+                          ),
+                        ),
+                      ),
                       child: Material(
                         borderRadius: BorderRadius.all(
                           Radius.circular(
                             20,
                           ),
                         ),
-                        color: Colors.green,
+                        color: Colors.white,
                         child: InkWell(
-                          splashColor: Colors.white,
+                          splashColor: Colors.brown[400],
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Icon(
                                 RpgAwesome.bubbling_potion,
-                                color: Colors.white,
+                                color: Colors.brown[400],
                               ),
                               Text(
                                 'Rempah',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.brown[400],
                                 ),
                               ),
                             ],
@@ -643,7 +695,7 @@ class _HomePageState extends State<HomePage> {
                   Text(
                     'Temukan Resep',
                     style: TextStyle(
-                      color: Colors.green,
+                      color: Colors.blue,
                       fontWeight: FontWeight.bold,
                       fontSize: 20.0,
                     ),
@@ -655,12 +707,12 @@ class _HomePageState extends State<HomePage> {
                         Text(
                           'See All',
                           style: TextStyle(
-                            color: Colors.green,
+                            color: Colors.blue,
                           ),
                         ),
                         Icon(
                           Icons.keyboard_arrow_right_outlined,
-                          color: Colors.green,
+                          color: Colors.blue,
                         ),
                       ],
                     ),
@@ -693,7 +745,7 @@ class _HomePageState extends State<HomePage> {
                             decoration: BoxDecoration(
                               color: Colors.transparent,
                               border: Border.all(
-                                color: Colors.green,
+                                color: Colors.blue,
                               ),
                               borderRadius: BorderRadius.all(
                                 Radius.circular(
