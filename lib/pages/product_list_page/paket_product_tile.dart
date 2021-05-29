@@ -128,6 +128,8 @@ class _PaketProductTileState extends State<PaketProductTile> {
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.fade,
               ),
             ),
 

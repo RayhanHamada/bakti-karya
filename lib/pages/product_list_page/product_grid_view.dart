@@ -25,6 +25,7 @@ class _ProductGridViewState extends State<ProductGridView> {
   });
 
   final KategoriProductListPage kategoriProductListPage;
+  var _products = Future<List<Product>>.value([]);
 
   /// Converter kategori ke string
   String? _kategoriProductListPageToString(
@@ -80,6 +81,9 @@ class _ProductGridViewState extends State<ProductGridView> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      _products = _getProducts();
+    });
   }
 
   SliverGridDelegate _getSliverGridDelegate() {
@@ -100,10 +104,16 @@ class _ProductGridViewState extends State<ProductGridView> {
     return kategoriProductListPage == KategoriProductListPage.Paket;
   }
 
+  Future<void> _refreshItem() async {
+    setState(() {
+      _products = _getProducts();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Product>>(
-      future: _getProducts(),
+      future: _products,
       builder: (context, snapshot) {
         /// Jika selesai loading data
         if (snapshot.connectionState == ConnectionState.done) {
@@ -120,28 +130,33 @@ class _ProductGridViewState extends State<ProductGridView> {
           if (snapshot.hasData) {
             var products = snapshot.data!;
 
-            return GridView.builder(
-              gridDelegate: _getSliverGridDelegate(),
-              itemCount: products.length,
-              itemBuilder: (context, index) {
-                if (products.length == 0) {
-                  return Container(
-                    child: Text(
-                      'nothing here',
-                    ),
-                  );
-                }
+            return RefreshIndicator(
+              onRefresh: () {
+                return _refreshItem();
+              },
+              child: GridView.builder(
+                gridDelegate: _getSliverGridDelegate(),
+                itemCount: products.length,
+                itemBuilder: (context, index) {
+                  if (products.length == 0) {
+                    return Container(
+                      child: Text(
+                        'nothing here',
+                      ),
+                    );
+                  }
 
-                if (_isPaket()) {
-                  return PaketProductTile(
+                  if (_isPaket()) {
+                    return PaketProductTile(
+                      product: products[index],
+                    );
+                  }
+
+                  return ProductTile(
                     product: products[index],
                   );
-                }
-
-                return ProductTile(
-                  product: products[index],
-                );
-              },
+                },
+              ),
             );
           }
 

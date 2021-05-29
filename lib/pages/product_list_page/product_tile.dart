@@ -73,7 +73,7 @@ class _ProductTileState extends State<ProductTile> {
                   color: Colors.blue,
                   width: 1,
                 ),
-                color: Colors.transparent,
+                color: Colors.white,
               ),
               margin: EdgeInsetsDirectional.only(
                 bottom: 8,
@@ -129,6 +129,8 @@ class _ProductTileState extends State<ProductTile> {
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.fade,
               ),
             ),
 
