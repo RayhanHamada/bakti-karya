@@ -4,4 +4,4 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 var firestore = FirebaseFirestore.instance;
 var firestorage = FirebaseStorage.instance;
-var firebaseAuth = FirebaseAuth.instance;
+var fireAuth = FirebaseAuth.instance;

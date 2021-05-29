@@ -1,5 +1,6 @@
 import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/models/Product.dart';
+import 'package:bakti_karya/pages/product_list_page/paket_product_tile.dart';
 import 'package:bakti_karya/pages/product_list_page/product_tile.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -81,6 +82,24 @@ class _ProductGridViewState extends State<ProductGridView> {
     super.initState();
   }
 
+  SliverGridDelegate _getSliverGridDelegate() {
+    if (kategoriProductListPage == KategoriProductListPage.Paket) {
+      return SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 1,
+        childAspectRatio: 1.2 / 1,
+      );
+    }
+
+    return SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 2,
+      childAspectRatio: 5 / 9,
+    );
+  }
+
+  bool _isPaket() {
+    return kategoriProductListPage == KategoriProductListPage.Paket;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Product>>(
@@ -102,10 +121,7 @@ class _ProductGridViewState extends State<ProductGridView> {
             var products = snapshot.data!;
 
             return GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 5 / 9,
-              ),
+              gridDelegate: _getSliverGridDelegate(),
               itemCount: products.length,
               itemBuilder: (context, index) {
                 if (products.length == 0) {
@@ -116,22 +132,16 @@ class _ProductGridViewState extends State<ProductGridView> {
                   );
                 }
 
+                if (_isPaket()) {
+                  return PaketProductTile(
+                    product: products[index],
+                  );
+                }
+
                 return ProductTile(
                   product: products[index],
                 );
               },
-              // children: [
-              //   ProductTile(
-              //     product: Product(
-              //       nama: 'Daun Tehsadasdaasdasasdasdasdsad',
-              //       deskripsi: 'Waw sangat',
-              //       harga: 20000,
-              //       kategoriProduct: KategoriProduct.Rempah,
-              //       photoName: 'assets/logo.png',
-              //       promo: 0.5,
-              //     ),
-              //   ),
-              // ],
             );
           }
 

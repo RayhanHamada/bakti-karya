@@ -2,23 +2,22 @@ import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/models/Product.dart';
 import 'package:flutter/material.dart';
 
-class ProductTile extends StatefulWidget {
+class PaketProductTile extends StatefulWidget {
   final Product product;
 
-  ProductTile({
+  PaketProductTile({
     required this.product,
   });
 
   @override
-  _ProductTileState createState() => _ProductTileState(
-        product: product,
-      );
+  _PaketProductTileState createState() =>
+      _PaketProductTileState(product: product);
 }
 
-class _ProductTileState extends State<ProductTile> {
+class _PaketProductTileState extends State<PaketProductTile> {
   final Product product;
 
-  _ProductTileState({
+  _PaketProductTileState({
     required this.product,
   });
 
@@ -64,7 +63,7 @@ class _ProductTileState extends State<ProductTile> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              height: 150,
+              height: 200,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(
                   20,
@@ -179,7 +178,7 @@ class _ProductTileState extends State<ProductTile> {
             Padding(
               padding: const EdgeInsets.only(
                 left: 10.0,
-                bottom: 20.0,
+                // bottom: 20.0,
               ),
               child: Text(
                 'Rp. ${hargaSetelahDiskon()}',

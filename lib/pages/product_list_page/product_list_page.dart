@@ -1,8 +1,10 @@
 import 'package:bakti_karya/pages/product_list_page/product_grid_view.dart';
+import 'package:bakti_karya/theme.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:fluttericon/font_awesome_icons.dart';
+import 'package:fluttericon/linecons_icons.dart';
 import 'package:fluttericon/rpg_awesome_icons.dart';
 
 class ProductListPage extends StatefulWidget {
@@ -28,7 +30,7 @@ class _ProductListPageState extends State<ProductListPage>
     super.initState();
     _tabController = TabController(
       initialIndex: kategoriToInt(kategoriProduk)!,
-      length: 5,
+      length: 6,
       vsync: this,
     );
   }
@@ -37,7 +39,7 @@ class _ProductListPageState extends State<ProductListPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(),
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
         onPressed: () {},
@@ -64,6 +66,9 @@ class _ProductListPageState extends State<ProductListPage>
           ProductGridView(
             kategoriProductListPage: KategoriProductListPage.Rempah,
           ),
+          ProductGridView(
+            kategoriProductListPage: KategoriProductListPage.Paket,
+          ),
         ]
             .map(
               (e) => Padding(
@@ -80,11 +85,17 @@ class _ProductListPageState extends State<ProductListPage>
 
   PreferredSizeWidget? _appBar() {
     return AppBar(
-      title: Text('Katalog Produk'),
+      title: Text(
+        'Katalog Produk',
+        style: TextStyle(
+          color: Colors.blue,
+        ),
+      ),
+      backgroundColor: Colors.white,
       leading: IconButton(
         icon: Icon(
           Icons.arrow_back_ios_outlined,
-          color: Colors.white,
+          color: Colors.blue,
         ),
         onPressed: () {
           Navigator.pop(context);
@@ -99,37 +110,43 @@ class _ProductListPageState extends State<ProductListPage>
           unselectedLabelColor: Colors.white.withOpacity(
             0.3,
           ),
-          indicatorColor: Colors.white,
+          indicatorColor: Colors.blue,
           controller: _tabController,
           tabs: [
             Tab(
               child: Icon(
                 FontAwesome.food,
-                color: Colors.white,
+                color: Colors.grey[400],
               ),
             ),
             Tab(
               child: Icon(
                 RpgAwesome.meat,
-                color: Colors.white,
+                color: Colors.pink[300],
               ),
             ),
             Tab(
               child: Icon(
                 FontAwesome5.carrot,
-                color: Colors.white,
+                color: Colors.orange,
               ),
             ),
             Tab(
               child: Icon(
                 FontAwesome5.apple_alt,
-                color: Colors.white,
+                color: Colors.red,
               ),
             ),
             Tab(
               child: Icon(
                 RpgAwesome.bubbling_potion,
-                color: Colors.white,
+                color: Colors.brown[400],
+              ),
+            ),
+            Tab(
+              child: Icon(
+                Linecons.food,
+                color: Colors.yellow[800],
               ),
             ),
           ]

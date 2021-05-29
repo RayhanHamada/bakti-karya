@@ -1,5 +1,4 @@
 import 'package:bakti_karya/firebase.dart';
-import 'package:bakti_karya/theme.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -23,12 +22,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _navigateToMePage(BuildContext context) {
+  void _navigateToMePage() {
     Navigator.pushNamed(context, '/me');
   }
 
   void _navigateToProductListPage(
-    BuildContext context,
     KategoriProductListPage kategoriProduk,
   ) {
     Navigator.pushNamed(context, '/productlist', arguments: <String, dynamic>{
@@ -36,7 +34,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _logout(BuildContext context) async {
+  void _logout() async {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -181,7 +179,6 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.grey[400],
                       ),
                       onTap: () => _navigateToProductListPage(
-                        context,
                         KategoriProductListPage.All,
                       ),
                     ),
@@ -194,7 +191,6 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.pink[300],
                       ),
                       onTap: () => _navigateToProductListPage(
-                        context,
                         KategoriProductListPage.Daging,
                       ),
                     ),
@@ -207,7 +203,6 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.orange,
                       ),
                       onTap: () => _navigateToProductListPage(
-                        context,
                         KategoriProductListPage.Sayur,
                       ),
                     ),
@@ -220,7 +215,6 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.red,
                       ),
                       onTap: () => _navigateToProductListPage(
-                        context,
                         KategoriProductListPage.Buah,
                       ),
                     ),
@@ -233,7 +227,6 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.brown[400],
                       ),
                       onTap: () => _navigateToProductListPage(
-                        context,
                         KategoriProductListPage.Rempah,
                       ),
                     ),
@@ -246,7 +239,6 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.yellow[800],
                       ),
                       onTap: () => _navigateToProductListPage(
-                        context,
                         KategoriProductListPage.Paket,
                       ),
                     ),
@@ -272,7 +264,7 @@ class _HomePageState extends State<HomePage> {
                     Icons.person,
                     color: Colors.blue,
                   ),
-                  onTap: () => _navigateToMePage(context),
+                  onTap: _navigateToMePage,
                 ),
                 Divider(
                   thickness: 1.5,
@@ -285,7 +277,7 @@ class _HomePageState extends State<HomePage> {
                     Icons.money,
                     color: Colors.blue,
                   ),
-                  onTap: () => _navigateToMePage(context),
+                  onTap: () {},
                 ),
                 Divider(
                   thickness: 1.5,
@@ -298,7 +290,7 @@ class _HomePageState extends State<HomePage> {
                     Icons.logout,
                     color: Colors.blue,
                   ),
-                  onTap: () => _logout(context),
+                  onTap: _logout,
                 ),
               ],
             ),
@@ -467,7 +459,6 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                       onPressed: () => _navigateToProductListPage(
-                        context,
                         KategoriProductListPage.All,
                       ),
                     ),
@@ -523,7 +514,6 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                           onTap: () => _navigateToProductListPage(
-                            context,
                             KategoriProductListPage.Daging,
                           ),
                         ),
@@ -568,7 +558,6 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                           onTap: () => _navigateToProductListPage(
-                            context,
                             KategoriProductListPage.Sayur,
                           ),
                         ),
@@ -613,7 +602,6 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                           onTap: () => _navigateToProductListPage(
-                            context,
                             KategoriProductListPage.Buah,
                           ),
                         ),
@@ -658,7 +646,6 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                           onTap: () => _navigateToProductListPage(
-                            context,
                             KategoriProductListPage.Rempah,
                           ),
                         ),
