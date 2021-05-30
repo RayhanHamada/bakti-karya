@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   void _navigateToProductListPage(
     KategoriProductListPage kategoriProduk,
   ) {
+    Navigator.pop(context);
     Navigator.pushNamed(context, '/productlist', arguments: <String, dynamic>{
       'kategoriProduk': kategoriProduk,
     });
