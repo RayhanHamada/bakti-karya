@@ -64,10 +64,10 @@ class Product {
   }
 }
 
-class RecipeProduct extends Product {
+class PackageProduct extends Product {
   List<String> bahan = [], langkah = [];
 
-  RecipeProduct({
+  PackageProduct({
     required String id,
     required String nama,
     KategoriProduct? kategoriProduct,
@@ -85,8 +85,8 @@ class RecipeProduct extends Product {
           promo: promo,
         );
 
-  factory RecipeProduct.fromJson(Map<String, dynamic> map) {
-    return RecipeProduct(
+  factory PackageProduct.fromJson(Map<String, dynamic> map) {
+    return PackageProduct(
       id: map['id'],
       nama: map['nama'],
       deskripsi: map['deskripsi'],

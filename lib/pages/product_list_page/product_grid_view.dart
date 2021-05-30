@@ -74,7 +74,7 @@ class _ProductGridViewState extends State<ProductGridView> {
 
       print('id => ${docData["id"]}');
       if (docData['category'] == 'paket')
-        return RecipeProduct.fromJson(docData);
+        return PackageProduct.fromJson(docData);
 
       return Product.fromJson(docData);
     }).toList();
