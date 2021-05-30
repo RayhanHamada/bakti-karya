@@ -43,6 +43,16 @@ class _PaketProductTileState extends State<PaketProductTile> {
     return (product.promo * 100).toInt();
   }
 
+  void _navigateToProductDetailPage(Product product) {
+    Navigator.pushNamed(
+      context,
+      '/product_detail',
+      arguments: <String, dynamic>{
+        'product': product,
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -207,9 +217,7 @@ class _PaketProductTileState extends State<PaketProductTile> {
         ),
       ),
       onTap: () {
-        if (product is PackageProduct) {
-          print('resep id : ${(product as PackageProduct).recipeId}');
-        }
+        _navigateToProductDetailPage(product);
       },
     );
   }
