@@ -64,9 +64,11 @@ class Product {
   }
 }
 
-class PackageProduct extends Product {
+mixin Recipe {
   List<String> bahan = [], langkah = [];
+}
 
+class PackageProduct extends Product with Recipe {
   PackageProduct({
     required String id,
     required String nama,
