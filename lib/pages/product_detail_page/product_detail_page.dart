@@ -17,12 +17,48 @@ class ProductDetailPage extends StatefulWidget {
       );
 }
 
-class _ProductDetailPageState extends State<ProductDetailPage> {
+class _ProductDetailPageState extends State<ProductDetailPage>
+    with SingleTickerProviderStateMixin {
   _ProductDetailPageState({
     required this.product,
   });
 
   Product product;
+
+  late final AnimationController _checkoutAnimationController =
+      AnimationController(
+    vsync: this,
+    duration: Duration(
+      seconds: 2,
+    ),
+  );
+
+  late final Animation<Offset> _checkoutOffsetAnimation = Tween<Offset>(
+    begin: Offset(0, 1),
+    end: Offset.zero,
+  ).animate(_checkoutAnimationController);
+
+  // untuk beli product
+  int banyak = 1;
+
+  // untuk nampung gambar agar nggak refresh tiap setState
+  late Widget _productImage;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkoutAnimationController.forward(from: 0);
+    _buildImage();
+  }
+
+  num hargaTotal() =>
+      ((product.harga - product.harga * product.promo) * banyak).toInt();
+
+  dynamic _banyakProductBerubah(dynamic v) {
+    setState(() {
+      banyak = v as int;
+    });
+  }
 
   void _backToCatalog() {
     Navigator.pop(context);
@@ -53,6 +89,48 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   }
 
   Future<void> _refreshPage() async {}
+
+  // build image di awal agar tidak refresh saat setState
+  void _buildImage() {
+    _productImage = FutureBuilder<String>(
+      future: _fetchImageUrl(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
+            if (snapshot.data!.isNotEmpty) {
+              return FittedBox(
+                fit: BoxFit.fill,
+                child: Image.network(
+                  snapshot.data!,
+                  fit: BoxFit.fill,
+                ),
+              );
+            }
+
+            return FittedBox(
+              fit: BoxFit.fill,
+              child: Image.asset(
+                'assets/logo.png',
+                fit: BoxFit.fill,
+              ),
+            );
+          }
+
+          return FittedBox(
+            fit: BoxFit.fill,
+            child: Image.asset(
+              'assets/logo.png',
+              fit: BoxFit.fill,
+            ),
+          );
+        }
+
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,45 +173,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         borderRadius: BorderRadius.all(
                           Radius.circular(20.0),
                         ),
-                        child: FutureBuilder<String>(
-                          future: _fetchImageUrl(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.done) {
-                              if (snapshot.hasData) {
-                                if (snapshot.data!.isNotEmpty) {
-                                  return FittedBox(
-                                    fit: BoxFit.fill,
-                                    child: Image.network(
-                                      snapshot.data!,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  );
-                                }
-
-                                return FittedBox(
-                                  fit: BoxFit.fill,
-                                  child: Image.asset(
-                                    'assets/logo.png',
-                                    fit: BoxFit.fill,
-                                  ),
-                                );
-                              }
-
-                              return FittedBox(
-                                fit: BoxFit.fill,
-                                child: Image.asset(
-                                  'assets/logo.png',
-                                  fit: BoxFit.fill,
-                                ),
-                              );
-                            }
-
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          },
-                        ),
+                        child: _productImage,
                       ),
                     ),
                   ),
@@ -184,72 +224,106 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       ),
                     ),
                   ],
-                  for (var i = 1; i < 10; i++)
-                    SizedBox(
-                      height: 100,
-                    ),
+                  SizedBox(
+                    height: 130,
+                  ),
                 ],
               ),
             ),
           ),
-          Container(
-            alignment: Alignment.bottomRight,
-            padding: const EdgeInsets.only(
-              left: 10.0,
-              right: 10.0,
-              bottom: 10.0,
-            ),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Container(
-                height: 150,
-                width: 120,
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(
-                      20,
+          SlideTransition(
+            position: _checkoutOffsetAnimation,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.only(
+                left: 10.0,
+                right: 10.0,
+                bottom: 10.0,
+              ),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: 120,
+                  // width: ,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(
+                        20,
+                      ),
+                    ),
+                    border: Border.all(
+                      color: Colors.blue,
                     ),
                   ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Total Harga Item',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 18,
+                            ),
+                          ),
+                          Text(
+                            'Rp. ${hargaTotal()}',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 22,
+                            ),
+                          ),
+                        ],
                       ),
-                      child: ClipRRect(
-                        clipBehavior: Clip.hardEdge,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(20),
-                        ),
-                        child: CustomNumberPicker(
-                          onValue: (v) {},
-                          initialValue: 0,
-                          maxValue: 100,
-                          minValue: 0,
-                        ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              border: Border.all(
+                                color: Colors.blue,
+                                width: 2,
+                              ),
+                            ),
+                            child: ClipRRect(
+                              clipBehavior: Clip.hardEdge,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(20),
+                              ),
+                              child: CustomNumberPicker(
+                                onValue: _banyakProductBerubah,
+                                initialValue: banyak,
+                                maxValue: 100,
+                                minValue: 1,
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                Colors.blue,
+                              ),
+                            ),
+                            child: Text(
+                              'Add to cart',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            onPressed: () {},
+                          ),
+                        ],
                       ),
-                    ),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                          Colors.white,
-                        ),
-                      ),
-                      child: Text(
-                        'Add to cart',
-                        style: TextStyle(
-                          color: Colors.blue,
-                        ),
-                      ),
-                      onPressed: () {},
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
