@@ -65,6 +65,7 @@ class Product {
 }
 
 mixin Recipe {
+  String recipeId = '';
   List<String> bahan = [], langkah = [];
 }
 
@@ -77,6 +78,7 @@ class PackageProduct extends Product with Recipe {
     required String photoName,
     required num harga,
     required num promo,
+    required String recipeId,
   }) : super(
           id: id,
           nama: nama,
@@ -85,7 +87,9 @@ class PackageProduct extends Product with Recipe {
           photoName: photoName,
           harga: harga,
           promo: promo,
-        );
+        ) {
+    this.recipeId = recipeId;
+  }
 
   factory PackageProduct.fromJson(Map<String, dynamic> map) {
     return PackageProduct(
@@ -96,6 +100,7 @@ class PackageProduct extends Product with Recipe {
       photoName: map['photo_name'],
       kategoriProduct: Product.stringToKategori(map['category']),
       promo: map['promo'],
+      recipeId: map['resep_id'],
     );
   }
 }

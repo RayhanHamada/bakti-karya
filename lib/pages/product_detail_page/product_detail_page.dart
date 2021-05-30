@@ -15,11 +15,15 @@ class ProductDetailPage extends StatefulWidget {
 }
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
-  Product product;
-
   _ProductDetailPageState({
     required this.product,
   });
+
+  Product product;
+
+  void _backToCatalog() {
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +60,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     return AppBar(
       backgroundColor: Colors.white,
       leading: IconButton(
-        onPressed: () {},
+        onPressed: _backToCatalog,
         icon: Icon(
           Icons.arrow_back_ios_outlined,
           color: Colors.blue,

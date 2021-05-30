@@ -90,11 +90,21 @@ class _PaketProductTileState extends State<PaketProductTile> {
                   future: _fetchImageUrl(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.hasData || snapshot.data != '') {
+                      if (snapshot.hasData) {
+                        if (snapshot.data!.isNotEmpty) {
+                          return FittedBox(
+                            fit: BoxFit.fill,
+                            child: Image.network(
+                              snapshot.data!,
+                              fit: BoxFit.fill,
+                            ),
+                          );
+                        }
+
                         return FittedBox(
                           fit: BoxFit.fill,
-                          child: Image.network(
-                            snapshot.data!,
+                          child: Image.asset(
+                            'assets/logo.png',
                             fit: BoxFit.fill,
                           ),
                         );
@@ -197,7 +207,9 @@ class _PaketProductTileState extends State<PaketProductTile> {
         ),
       ),
       onTap: () {
-        print(product.nama);
+        if (product is PackageProduct) {
+          print('resep id : ${(product as PackageProduct).recipeId}');
+        }
       },
     );
   }

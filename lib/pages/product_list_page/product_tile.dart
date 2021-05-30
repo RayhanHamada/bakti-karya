@@ -28,10 +28,13 @@ class _ProductTileState extends State<ProductTile> {
   }
 
   Future<String> _fetchImageUrl() {
-    return firestorage
-        .refFromURL(
-            'gs://bakti-karya.appspot.com/app/foto_produk/${Product.kategoriToString(product.kategoriProduct!)}/${product.photoName}')
-        .getDownloadURL();
+    // * uncomment these lines to fetch actual photo (ini di comment untuk hemat kuota firebase)
+    // return firestorage
+    //     .refFromURL(
+    //         'gs://bakti-karya.appspot.com/app/foto_produk/${Product.kategoriToString(product.kategoriProduct!)}/${product.photoName}')
+    //     .getDownloadURL();
+
+    return Future.value('');
   }
 
   int hargaSetelahDiskon() {
@@ -40,6 +43,16 @@ class _ProductTileState extends State<ProductTile> {
 
   int persenDiskon() {
     return (product.promo * 100).toInt();
+  }
+
+  void _navigateToProductDetailPage(Product product) {
+    Navigator.pushNamed(
+      context,
+      '/product_detail',
+      arguments: <String, dynamic>{
+        'product': product,
+      },
+    );
   }
 
   @override
@@ -90,10 +103,20 @@ class _ProductTileState extends State<ProductTile> {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       if (snapshot.hasData) {
+                        if (snapshot.data!.isNotEmpty) {
+                          return FittedBox(
+                            fit: BoxFit.fill,
+                            child: Image.network(
+                              snapshot.data!,
+                              fit: BoxFit.fill,
+                            ),
+                          );
+                        }
+
                         return FittedBox(
                           fit: BoxFit.fill,
-                          child: Image.network(
-                            snapshot.data!,
+                          child: Image.asset(
+                            'assets/logo.png',
                             fit: BoxFit.fill,
                           ),
                         );
@@ -196,7 +219,7 @@ class _ProductTileState extends State<ProductTile> {
         ),
       ),
       onTap: () {
-        print(product.nama);
+        _navigateToProductDetailPage(product);
       },
     );
   }
