@@ -1,4 +1,6 @@
+import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/pages/register_page/register_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -8,7 +10,12 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   var _formKey = GlobalKey<FormState>();
+  var _emailTextController = TextEditingController();
+  var _passwordTextController = TextEditingController();
   var _obscurePassword = true;
+  var _isFetchingData = false;
+  var _fetchingMsg = '';
+  var _isErrorLogin = false;
 
   void _toggleObscurePassword() {
     setState(() {
@@ -41,12 +48,66 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _navigateToRegisterPage() {
+    // reset isi form
+    _emailTextController.text = '';
+    _passwordTextController.text = '';
+
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => RegisterPage(),
       ),
     );
+  }
+
+  Future<void> _navigateToHomePage() async {
+    // jika isi form valid maka login
+    if (_formKey.currentState!.validate()) {
+      var email = _emailTextController.text;
+      var password = _passwordTextController.text;
+      UserCredential userCred;
+
+      try {
+        setState(() {
+          _isFetchingData = true;
+          _fetchingMsg = 'Please Wait....';
+        });
+
+        print('$email $password');
+        userCred = await fireAuth.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+      } on FirebaseAuthException {
+        setState(() {
+          _isFetchingData = false;
+          _fetchingMsg = 'Invalid email or password, please try again !';
+          _isErrorLogin = !_isErrorLogin;
+        });
+
+        _emailTextController.clear();
+        _passwordTextController.clear();
+
+        Future.delayed(
+          Duration(seconds: 3),
+          () {
+            setState(() {
+              _fetchingMsg = '';
+              _isErrorLogin = !_isErrorLogin;
+            });
+          },
+        );
+      }
+
+      setState(() {
+        _isFetchingData = false;
+        _fetchingMsg = 'Success';
+      });
+
+      if (fireAuth.currentUser != null) {
+        Navigator.pushNamed(context, '/home');
+      }
+    }
   }
 
   @override
@@ -105,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                          * Field Email
                          */
                         TextFormField(
-                          // controller: _emailController,
+                          controller: _emailTextController,
                           validator: _validateEmail,
                           decoration: InputDecoration(
                             labelText: 'Email',
@@ -127,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
                          * Field password
                          */
                         TextFormField(
-                          // controller: _passwordController,
+                          controller: _passwordTextController,
                           validator: _validatePassword,
                           decoration: InputDecoration(
                             labelText: 'Password',
@@ -166,7 +227,7 @@ class _LoginPageState extends State<LoginPage> {
                                 color: Colors.white,
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: _navigateToHomePage,
                           ),
                         ),
 
@@ -208,6 +269,29 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                ),
+                if (_isFetchingData)
+                  Center(
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                        top: 30.0,
+                      ),
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20.0,
+                  ),
+                  child: Center(
+                    child: Text(
+                      _fetchingMsg,
+                      style: TextStyle(
+                        color: _isErrorLogin ? Colors.red : Colors.blue,
+                      ),
                     ),
                   ),
                 ),

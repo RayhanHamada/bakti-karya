@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/pages/login_page/login_page.dart';
 import 'package:flutter/material.dart';
 
@@ -12,23 +13,16 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   @override
   void initState() {
     super.initState();
-    startTime();
+    Future.delayed(Duration(seconds: 3), _authenticate);
   }
 
-  startTime() {
-    return Timer(
-      const Duration(
-        seconds: 3,
-      ),
-      () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => LoginPage(),
-          ),
-        );
-      },
-    );
+  void _authenticate() {
+    if (fireAuth.currentUser != null) {
+      Navigator.pushReplacementNamed(context, '/home');
+      return;
+    }
+
+    Navigator.pushReplacementNamed(context, '/login');
   }
 
   @override
