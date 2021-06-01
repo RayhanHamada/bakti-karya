@@ -8,7 +8,11 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   var _formKey = GlobalKey<FormState>();
 
-  var _passwordController = TextEditingController();
+  var _namaTextController = TextEditingController();
+  var _noHpTextController = TextEditingController();
+  var _alamatTextController = TextEditingController();
+  var _emailTextController = TextEditingController();
+  var _passwordTextController = TextEditingController();
 
   var _obscurePassword = true;
 
@@ -74,7 +78,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   String? _validatePasswordConfirmation(String? password) {
-    var _password = _passwordController.text;
+    var _password = _passwordTextController.text;
 
     if (_password != password) {
       return 'Password confirmation must be the same as password';
@@ -144,6 +148,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         /// input field untuk nama
                         TextFormField(
                           validator: _validateNama,
+                          controller: _namaTextController,
                           decoration: InputDecoration(
                             labelText: 'Nama',
                             border: OutlineInputBorder(
@@ -164,6 +169,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         TextFormField(
                           keyboardType: TextInputType.phone,
                           validator: _validateNoHp,
+                          controller: _noHpTextController,
                           decoration: InputDecoration(
                             labelText: 'No. Handphone',
                             border: OutlineInputBorder(
@@ -181,6 +187,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         /// input field untuk alamat rumah
                         TextFormField(
                           validator: _validateAlamat,
+                          controller: _alamatTextController,
                           decoration: InputDecoration(
                             labelText: 'Alamat Rumah',
                             border: OutlineInputBorder(
@@ -199,6 +206,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         TextFormField(
                           keyboardType: TextInputType.emailAddress,
                           validator: _validateEmail,
+                          controller: _emailTextController,
                           decoration: InputDecoration(
                             labelText: 'Email',
                             border: OutlineInputBorder(
@@ -215,8 +223,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
                         /// input field untuk password
                         TextFormField(
-                          controller: _passwordController,
-                          validator: _validatePassword,
+                          controller: _passwordTextController,
+                          validator: _validatePassword,,
                           keyboardType: TextInputType.visiblePassword,
                           decoration: InputDecoration(
                             labelText: 'Password',
