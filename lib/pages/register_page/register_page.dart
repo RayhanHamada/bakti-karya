@@ -217,6 +217,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         TextFormField(
                           controller: _passwordController,
                           validator: _validatePassword,
+                          keyboardType: TextInputType.visiblePassword,
                           decoration: InputDecoration(
                             labelText: 'Password',
                             border: OutlineInputBorder(
@@ -243,6 +244,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         /// input field untuk konfirmasi password
                         TextFormField(
                           validator: _validatePasswordConfirmation,
+                          keyboardType: TextInputType.visiblePassword,
                           decoration: InputDecoration(
                             labelText: 'Password Confirmation',
                             border: OutlineInputBorder(
