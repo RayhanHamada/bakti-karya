@@ -8,6 +8,15 @@ class UserData {
     required this.alamat,
   });
 
+  factory UserData.fromJSON(Map<String, dynamic> map) => UserData(
+        email: map['email'],
+        name: map['name'],
+        noHp: map['no_hp'],
+        alamat: map['alamat'],
+      )..checkoutItems = (map['current_checkout_items'] as List<dynamic>)
+          .map((e) => CheckoutItem.fromJSON(e))
+          .toList();
+
   final String email;
   String name;
   String noHp;

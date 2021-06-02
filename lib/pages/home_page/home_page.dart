@@ -1,4 +1,5 @@
 import 'package:bakti_karya/firebase.dart';
+import 'package:bakti_karya/models/User.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -44,9 +45,11 @@ class _HomePageState extends State<HomePage> {
         actions: [
           TextButton(
             child: Text('Yes'),
-            onPressed: () {
-              // TODO: make logout with firebase
-              // TODO: on firebase logout success go to login page
+            onPressed: () async {
+              await fireAuth.signOut().then((_) {
+                Navigator.pop(context);
+                Navigator.pushReplacementNamed(context, '/login');
+              });
             },
           ),
           TextButton(
@@ -86,6 +89,25 @@ class _HomePageState extends State<HomePage> {
     return bannerList;
   }
 
+  Future<UserData> _fetchUserData() async {
+    if (fireAuth.currentUser != null) {
+      return firestore
+          .collection('/users')
+          .where('email', isEqualTo: fireAuth.currentUser!.email)
+          .get()
+          .then(
+            (snapshot) => UserData.fromJSON(snapshot.docs[0].data()),
+          );
+    }
+
+    return Future.value();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   PreferredSizeWidget _appBar() {
     return AppBar(
       backgroundColor: Colors.white,
@@ -114,37 +136,46 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          DrawerHeader(
-            curve: Curves.bounceInOut,
-            decoration: BoxDecoration(
-              color: Colors.blue[400],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                CircleAvatar(
-                  foregroundImage: AssetImage(
-                    'assets/logo.png',
+          FutureBuilder<UserData>(
+            future: _fetchUserData(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return DrawerHeader(
+                  curve: Curves.bounceInOut,
+                  decoration: BoxDecoration(
+                    color: Colors.blue[400],
                   ),
-                  radius: 40.0,
-                ),
-                Text(
-                  'Nama userasdasdsdasds',
-                  style: TextStyle(
-                    // fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.white,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      CircleAvatar(
+                        foregroundImage: AssetImage(
+                          'assets/logo.png',
+                        ),
+                        radius: 40.0,
+                      ),
+                      Text(
+                        snapshot.data?.name ?? 'fetching...',
+                        style: TextStyle(
+                          // fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        fireAuth.currentUser?.email ?? 'Please wait...',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                Text(
-                  'email.user@gmail.com',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
+                );
+              }
+
+              return Container();
+            },
           ),
           Flexible(
             child: ListView(

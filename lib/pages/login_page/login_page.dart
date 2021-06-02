@@ -91,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
         });
       }
 
-      Future.delayed(
+      await Future.delayed(
         Duration(seconds: 1),
         () {
           setState(() {
