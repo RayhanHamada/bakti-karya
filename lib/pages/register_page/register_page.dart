@@ -144,11 +144,16 @@ class _RegisterPageState extends State<RegisterPage> {
             _formKey.currentState!.reset();
           });
         });
+
+        // jika tidak error langsung ke login page
+        if (!_isErrorRegister) {
+          _navigateToLogin();
+        }
       }
 
       Future.delayed(
         Duration(
-          seconds: 1,
+          seconds: 2,
         ),
         () {
           setState(() {
@@ -156,14 +161,24 @@ class _RegisterPageState extends State<RegisterPage> {
             _fetchingMsg = '';
             _isFetchingData = false;
           });
-
-          // jika tidak error langsung ke login page
-          if (!_isErrorRegister) {
-            _navigateToLogin();
-          }
         },
       );
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
   }
 
   @override
@@ -175,7 +190,7 @@ class _RegisterPageState extends State<RegisterPage> {
             Icons.arrow_back_outlined,
             color: Colors.blue,
           ),
-          onPressed: _navigateToLogin,
+          onPressed: _isErrorRegister ? null : _navigateToLogin,
         ),
         title: Text(
           'Back to Login',
