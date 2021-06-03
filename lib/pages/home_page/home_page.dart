@@ -1,5 +1,5 @@
 import 'package:bakti_karya/firebase.dart';
-import 'package:bakti_karya/models/User.dart';
+import 'package:bakti_karya/models/UserData.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
