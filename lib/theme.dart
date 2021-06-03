@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-var buttonColor = 0x24AADF;
+var buttonColor = 0xff24AADF;
 
 var themeData = ThemeData(
   primarySwatch: Colors.blue,
