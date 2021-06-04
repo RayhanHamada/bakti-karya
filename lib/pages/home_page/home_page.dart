@@ -120,9 +120,7 @@ class _HomePageState extends State<HomePage> {
       leading: Builder(
         builder: (context) => IconButton(
           color: Colors.blue,
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
+          onPressed: Scaffold.of(context).openDrawer,
           icon: Icon(
             Icons.menu,
           ),
