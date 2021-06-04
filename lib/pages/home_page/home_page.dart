@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/models/UserData.dart';
 import 'package:bakti_karya/utils.dart';
@@ -89,18 +90,16 @@ class _HomePageState extends State<HomePage> {
     return bannerList;
   }
 
-  Future<UserData> _fetchUserData() async {
-    if (fireAuth.currentUser != null) {
-      return firestore
-          .collection('/users')
-          .where('email', isEqualTo: fireAuth.currentUser!.email)
-          .get()
-          .then(
-            (snapshot) => UserData.fromJSON(snapshot.docs[0].data()),
-          );
-    }
+  Future<UserData> _fetchUserData() {
+    if (fireAuth.currentUser == null) return Future.value();
 
-    return Future.value();
+    return firestore
+        .collection('/users')
+        .where('email', isEqualTo: fireAuth.currentUser!.email)
+        .get()
+        .then(
+          (snapshot) => UserData.fromJSON(snapshot.docs.first.data()),
+        );
   }
 
   @override
@@ -126,6 +125,18 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+      actions: <Widget>[
+        IconButton(
+          onPressed: () {},
+          icon: Badge(
+            badgeContent: Text('0'),
+            child: Icon(
+              Icons.shopping_cart_outlined,
+              color: Colors.blue,
+            ),
+          ),
+        )
+      ],
     );
   }
 

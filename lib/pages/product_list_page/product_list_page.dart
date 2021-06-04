@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:bakti_karya/pages/product_list_page/product_grid_view.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
@@ -39,14 +40,6 @@ class _ProductListPageState extends State<ProductListPage>
     return Scaffold(
       appBar: _appBar(),
       backgroundColor: Colors.white,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
-        onPressed: () {},
-        child: Icon(
-          Icons.shopping_cart_outlined,
-          color: Colors.green,
-        ),
-      ),
       body: TabBarView(
         controller: _tabController,
         children: [
@@ -160,6 +153,18 @@ class _ProductListPageState extends State<ProductListPage>
               .toList(),
         ),
       ),
+      actions: <Widget>[
+        IconButton(
+          onPressed: () {},
+          icon: Badge(
+            badgeContent: Text('0'),
+            child: Icon(
+              Icons.shopping_cart_outlined,
+              color: Colors.blue,
+            ),
+          ),
+        )
+      ],
     );
   }
 }

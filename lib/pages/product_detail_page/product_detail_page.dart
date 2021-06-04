@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/models/Product.dart';
 import 'package:flutter/material.dart';
@@ -350,14 +351,17 @@ class _ProductDetailPageState extends State<ProductDetailPage>
         maxLines: 1,
         overflow: TextOverflow.fade,
       ),
-      actions: [
+      actions: <Widget>[
         IconButton(
-          icon: Icon(
-            Icons.shopping_cart_outlined,
-            color: Colors.blue,
-          ),
           onPressed: () {},
-        ),
+          icon: Badge(
+            badgeContent: Text('0'),
+            child: Icon(
+              Icons.shopping_cart_outlined,
+              color: Colors.blue,
+            ),
+          ),
+        )
       ],
     );
   }
