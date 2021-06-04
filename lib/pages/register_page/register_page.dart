@@ -377,7 +377,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             /// Tombol Register
                             Container(
                               width: double.infinity,
-                              child: ElevatedButton(
+                              child: MaterialButton(
+                                color: Theme.of(context).buttonColor,
                                 child: Text(
                                   'Register',
                                   style: TextStyle(

@@ -232,7 +232,8 @@ class _LoginPageState extends State<LoginPage> {
                            */
                             Container(
                               width: double.infinity,
-                              child: ElevatedButton(
+                              child: MaterialButton(
+                                color: Theme.of(context).buttonColor,
                                 child: Text(
                                   'Login',
                                   style: TextStyle(
