@@ -1,3 +1,4 @@
+import 'package:bakti_karya/pages/checkout_page/checkout_page.dart';
 import 'package:bakti_karya/pages/home_page/home_page.dart';
 import 'package:bakti_karya/pages/login_page/login_page.dart';
 import 'package:bakti_karya/pages/me_page/me_page.dart';
@@ -41,6 +42,10 @@ Route? onGenerateRoute(RouteSettings settings) {
       var product = ((settings.arguments) as Map<String, dynamic>)['product'];
       return MaterialPageRoute(
         builder: (_) => ProductDetailPage(product: product),
+      );
+    case '/checkout_page':
+      return MaterialPageRoute(
+        builder: (_) => CheckoutPage(),
       );
     default:
       return null;

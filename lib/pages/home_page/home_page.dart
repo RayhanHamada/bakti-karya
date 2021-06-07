@@ -127,7 +127,9 @@ class _HomePageState extends State<HomePage> {
       ),
       actions: <Widget>[
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, '/checkout_page');
+          },
           icon: Badge(
             badgeContent: Text('0'),
             child: Icon(
