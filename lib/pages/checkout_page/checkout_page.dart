@@ -82,24 +82,31 @@ class _CheckoutPageState extends State<CheckoutPage> {
     // get user email
     var email = fireAuth.currentUser!.email;
     var query = firestore.collection('/users').where('email', isEqualTo: email);
-    List tempCheckoutItems = [];
+    List<CurrentCheckoutItem> tempCheckoutItems = [];
 
     // ambil semua checkout item dulu
     await query.get().then((col) => col.docs.first).then((user) {
       /// ambil semua item kecuali item dengan id dari variable [item]
-      tempCheckoutItems = (user.data()['current_checkout_items'])
-          .where((i) => i['item_id'] != item.product.id)
+      tempCheckoutItems = (user.data()['current_checkout_items'] as List)
+          .map((e) => CurrentCheckoutItem.fromJSON(e))
+          .where((i) => i.itemId != item.product.id)
           .toList();
 
       // tambahkan item checkout yang baru (dengan id sama tapi amount yang baru) ke variabel tempCheckoutItems
-      tempCheckoutItems.add({
-        'item_id': item.product.id,
-        'amount': banyak,
-      });
+      tempCheckoutItems.add(
+        CurrentCheckoutItem(
+          itemId: item.product.id,
+          amount: banyak,
+        ),
+      );
+
+      /// buat tiap anggotanya ke bentuk map<string, dynamic> agar bisa di save ke firestore
+      var newCurrentCheckoutItems =
+          tempCheckoutItems.map((e) => e.toJSON()).toList();
 
       /// lalu update data [current_checkout_items] di firestore dengan array yang baru
       user.reference.update({
-        'current_checkout_items': tempCheckoutItems,
+        'current_checkout_items': newCurrentCheckoutItems,
       });
     });
 
