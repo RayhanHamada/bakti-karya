@@ -1,4 +1,5 @@
 import 'package:badges/badges.dart';
+import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/pages/product_list_page/product_grid_view.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,24 @@ class _ProductListPageState extends State<ProductListPage>
   KategoriProductListPage kategoriProduk;
 
   TabController? _tabController;
+
+  void _navigateToCheckoutPage() {
+    Navigator.pushNamed(context, '/checkout_page').then((_) => setState(() {}));
+  }
+
+  Future<num> _fetchShoppingAmounts() {
+    return firestore
+        .collection('/users')
+        .where('email', isEqualTo: fireAuth.currentUser!.email)
+        .get()
+        .then(
+          (col) => (col.docs.first.data()['current_checkout_items'] as List)
+              .fold<num>(
+            0,
+            (prev, curr) => prev + curr['amount'],
+          ),
+        );
+  }
 
   @override
   void initState() {
@@ -154,16 +173,19 @@ class _ProductListPageState extends State<ProductListPage>
         ),
       ),
       actions: <Widget>[
-        IconButton(
-          onPressed: () {},
-          icon: Badge(
-            badgeContent: Text('0'),
-            child: Icon(
-              Icons.shopping_cart_outlined,
-              color: Colors.blue,
+        FutureBuilder(
+          future: _fetchShoppingAmounts(),
+          builder: (_, snapshot) => IconButton(
+            onPressed: _navigateToCheckoutPage,
+            icon: Badge(
+              badgeContent: Text('${snapshot.data}'),
+              child: Icon(
+                Icons.shopping_cart_outlined,
+                color: Colors.blue,
+              ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

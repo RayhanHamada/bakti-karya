@@ -34,7 +34,11 @@ class _HomePageState extends State<HomePage> {
     Navigator.pop(context);
     Navigator.pushNamed(context, '/productlist', arguments: <String, dynamic>{
       'kategoriProduk': kategoriProduk,
-    });
+    }).then((_) => setState(() {}));
+  }
+
+  void _navigateToCheckoutPage() {
+    Navigator.pushNamed(context, '/checkout_page').then((_) => setState(() {}));
   }
 
   void _logout() async {
@@ -102,6 +106,24 @@ class _HomePageState extends State<HomePage> {
         );
   }
 
+  Future<num> _fetchShoppingAmounts() {
+    return firestore
+        .collection('/users')
+        .where('email', isEqualTo: fireAuth.currentUser!.email)
+        .get()
+        .then(
+          (col) => (col.docs.first.data()['current_checkout_items'] as List)
+              .fold<num>(
+            0,
+            (prev, curr) => prev + curr['amount'],
+          ),
+        );
+  }
+
+  Future<void> _refreshPage() async {
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
@@ -126,18 +148,19 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       actions: <Widget>[
-        IconButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/checkout_page');
-          },
-          icon: Badge(
-            badgeContent: Text('0'),
-            child: Icon(
-              Icons.shopping_cart_outlined,
-              color: Colors.blue,
+        FutureBuilder(
+          future: _fetchShoppingAmounts(),
+          builder: (_, snapshot) => IconButton(
+            onPressed: _navigateToCheckoutPage,
+            icon: Badge(
+              badgeContent: Text('${snapshot.data}'),
+              child: Icon(
+                Icons.shopping_cart_outlined,
+                color: Colors.blue,
+              ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -344,149 +367,34 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _body() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.only(
-          top: 10.0,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            /// Section Promo and Deals
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 10.0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Promo and Deals',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Row(
-                      children: [
-                        Text(
-                          'See All',
-                          style: TextStyle(
-                            color: Colors.blue,
-                          ),
-                        ),
-                        Icon(
-                          Icons.keyboard_arrow_right_outlined,
-                          color: Colors.blue,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            FutureBuilder<List<String>>(
-              future: _getPromoBanner(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.hasError) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      alignment: Alignment.center,
-                      child: Text('Somethings wrong'),
-                    );
-                  }
-
-                  return CarouselSlider(
-                    items: snapshot.data!.map((url) {
-                      return Builder(
-                        builder: (BuildContext context) {
-                          return Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: EdgeInsets.symmetric(
-                              horizontal: 5.0,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              border: Border.all(
-                                color: Colors.blue,
-                              ),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(
-                                  10.0,
-                                ),
-                              ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(
-                                  10,
-                                ),
-                              ),
-                              child: Image.network(
-                                url,
-                                fit: BoxFit.cover,
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                  if (loadingProgress?.cumulativeBytesLoaded !=
-                                      loadingProgress?.expectedTotalBytes) {
-                                    return Align(
-                                      alignment: Alignment.center,
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }
-
-                                  return child;
-                                },
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    }).toList(),
-                    options: CarouselOptions(
-                      autoPlay: true,
-                      pauseAutoPlayOnTouch: true,
-                      autoPlayCurve: Curves.fastOutSlowIn,
-                    ),
-                  );
-                }
-
-                return Center(
-                  child: Container(
-                    width: 70,
-                    height: 70,
-                    child: CircularProgressIndicator(
-                      color: Colors.blue,
-                    ),
-                  ),
-                );
-              },
-            ),
-
-            /// Section Katalog
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 30.0,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10.0),
+    return RefreshIndicator(
+      onRefresh: _refreshPage,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            top: 10.0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              /// Section Promo and Deals
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 10.0,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Katalog',
+                      'Promo and Deals',
                       style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
-                        fontSize: 22.0,
+                        fontSize: 20.0,
                       ),
                     ),
                     TextButton(
+                      onPressed: () {},
                       child: Row(
                         children: [
                           Text(
@@ -501,335 +409,455 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                      onPressed: () => _navigateToProductListPage(
-                        KategoriProductListPage.All,
+                    ),
+                  ],
+                ),
+              ),
+              FutureBuilder<List<String>>(
+                future: _getPromoBanner(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasError) {
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        alignment: Alignment.center,
+                        child: Text('Somethings wrong'),
+                      );
+                    }
+
+                    return CarouselSlider(
+                      items: snapshot.data!.map((url) {
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: EdgeInsets.symmetric(
+                                horizontal: 5.0,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                border: Border.all(
+                                  color: Colors.blue,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    10.0,
+                                  ),
+                                ),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    10,
+                                  ),
+                                ),
+                                child: Image.network(
+                                  url,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                    if (loadingProgress
+                                            ?.cumulativeBytesLoaded !=
+                                        loadingProgress?.expectedTotalBytes) {
+                                      return Align(
+                                        alignment: Alignment.center,
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    }
+
+                                    return child;
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }).toList(),
+                      options: CarouselOptions(
+                        autoPlay: true,
+                        pauseAutoPlayOnTouch: true,
+                        autoPlayCurve: Curves.fastOutSlowIn,
+                      ),
+                    );
+                  }
+
+                  return Center(
+                    child: Container(
+                      width: 70,
+                      height: 70,
+                      child: CircularProgressIndicator(
+                        color: Colors.blue,
+                      ),
+                    ),
+                  );
+                },
+              ),
+
+              /// Section Katalog
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 30.0,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Katalog',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22.0,
+                        ),
+                      ),
+                      TextButton(
+                        child: Row(
+                          children: [
+                            Text(
+                              'See All',
+                              style: TextStyle(
+                                color: Colors.blue,
+                              ),
+                            ),
+                            Icon(
+                              Icons.keyboard_arrow_right_outlined,
+                              color: Colors.blue,
+                            ),
+                          ],
+                        ),
+                        onPressed: () => _navigateToProductListPage(
+                          KategoriProductListPage.All,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 10.0,
+                ),
+                child: Container(
+                  height: 100,
+                  child: GridView.count(
+                    crossAxisCount: 4,
+                    children: [
+                      Container(
+                        height: 70,
+                        width: 70,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.pink,
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              20,
+                            ),
+                          ),
+                        ),
+                        child: Material(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              20,
+                            ),
+                          ),
+                          color: Colors.white,
+                          child: InkWell(
+                            splashColor: Colors.pink[300],
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Icon(
+                                  RpgAwesome.meat,
+                                  color: Colors.pink[300],
+                                ),
+                                Text(
+                                  'Daging',
+                                  style: TextStyle(
+                                    color: Colors.pink[300],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            onTap: () => _navigateToProductListPage(
+                              KategoriProductListPage.Daging,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 70,
+                        width: 70,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.orange,
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              20,
+                            ),
+                          ),
+                        ),
+                        child: Material(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              20,
+                            ),
+                          ),
+                          color: Colors.white,
+                          child: InkWell(
+                            splashColor: Colors.orange,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Icon(
+                                  FontAwesome5.carrot,
+                                  color: Colors.orange,
+                                ),
+                                Text(
+                                  'Sayur',
+                                  style: TextStyle(
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            onTap: () => _navigateToProductListPage(
+                              KategoriProductListPage.Sayur,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 70,
+                        width: 70,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.red,
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              20,
+                            ),
+                          ),
+                        ),
+                        child: Material(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              20,
+                            ),
+                          ),
+                          color: Colors.white,
+                          child: InkWell(
+                            splashColor: Colors.white,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Icon(
+                                  FontAwesome5.apple_alt,
+                                  color: Colors.red,
+                                ),
+                                Text(
+                                  'Buah',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            onTap: () => _navigateToProductListPage(
+                              KategoriProductListPage.Buah,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 70,
+                        width: 70,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.brown,
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              20,
+                            ),
+                          ),
+                        ),
+                        child: Material(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              20,
+                            ),
+                          ),
+                          color: Colors.white,
+                          child: InkWell(
+                            splashColor: Colors.brown[400],
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Icon(
+                                  RpgAwesome.bubbling_potion,
+                                  color: Colors.brown[400],
+                                ),
+                                Text(
+                                  'Rempah',
+                                  style: TextStyle(
+                                    color: Colors.brown[400],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            onTap: () => _navigateToProductListPage(
+                              KategoriProductListPage.Rempah,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ].map(
+                      (e) {
+                        return Padding(
+                          padding: const EdgeInsets.all(
+                            12.0,
+                          ),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: e,
+                          ),
+                        );
+                      },
+                    ).toList(),
+                  ),
+                ),
+              ),
+
+              /// Section Discover recipes
+              SizedBox(
+                height: 50,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 10.0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Temukan Resep',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: Row(
+                        children: [
+                          Text(
+                            'See All',
+                            style: TextStyle(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          Icon(
+                            Icons.keyboard_arrow_right_outlined,
+                            color: Colors.blue,
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 10.0,
-              ),
-              child: Container(
-                height: 100,
-                child: GridView.count(
-                  crossAxisCount: 4,
-                  children: [
-                    Container(
-                      height: 70,
-                      width: 70,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.pink,
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            20,
-                          ),
-                        ),
-                      ),
-                      child: Material(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            20,
-                          ),
-                        ),
-                        color: Colors.white,
-                        child: InkWell(
-                          splashColor: Colors.pink[300],
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(
-                                RpgAwesome.meat,
-                                color: Colors.pink[300],
-                              ),
-                              Text(
-                                'Daging',
-                                style: TextStyle(
-                                  color: Colors.pink[300],
-                                ),
-                              ),
-                            ],
-                          ),
-                          onTap: () => _navigateToProductListPage(
-                            KategoriProductListPage.Daging,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 70,
-                      width: 70,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            20,
-                          ),
-                        ),
-                      ),
-                      child: Material(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            20,
-                          ),
-                        ),
-                        color: Colors.white,
-                        child: InkWell(
-                          splashColor: Colors.orange,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(
-                                FontAwesome5.carrot,
-                                color: Colors.orange,
-                              ),
-                              Text(
-                                'Sayur',
-                                style: TextStyle(
-                                  color: Colors.orange,
-                                ),
-                              ),
-                            ],
-                          ),
-                          onTap: () => _navigateToProductListPage(
-                            KategoriProductListPage.Sayur,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 70,
-                      width: 70,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.red,
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            20,
-                          ),
-                        ),
-                      ),
-                      child: Material(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            20,
-                          ),
-                        ),
-                        color: Colors.white,
-                        child: InkWell(
-                          splashColor: Colors.white,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(
-                                FontAwesome5.apple_alt,
-                                color: Colors.red,
-                              ),
-                              Text(
-                                'Buah',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                          onTap: () => _navigateToProductListPage(
-                            KategoriProductListPage.Buah,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 70,
-                      width: 70,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.brown,
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            20,
-                          ),
-                        ),
-                      ),
-                      child: Material(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            20,
-                          ),
-                        ),
-                        color: Colors.white,
-                        child: InkWell(
-                          splashColor: Colors.brown[400],
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(
-                                RpgAwesome.bubbling_potion,
-                                color: Colors.brown[400],
-                              ),
-                              Text(
-                                'Rempah',
-                                style: TextStyle(
-                                  color: Colors.brown[400],
-                                ),
-                              ),
-                            ],
-                          ),
-                          onTap: () => _navigateToProductListPage(
-                            KategoriProductListPage.Rempah,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ].map(
-                    (e) {
-                      return Padding(
-                        padding: const EdgeInsets.all(
-                          12.0,
-                        ),
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: e,
-                        ),
+              FutureBuilder<List<String>>(
+                future: _getResepBanner(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasError) {
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        alignment: Alignment.center,
+                        child: Text('Somethings wrong'),
                       );
-                    },
-                  ).toList(),
-                ),
-              ),
-            ),
+                    }
 
-            /// Section Discover recipes
-            SizedBox(
-              height: 50,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 10.0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Temukan Resep',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Row(
-                      children: [
-                        Text(
-                          'See All',
-                          style: TextStyle(
-                            color: Colors.blue,
-                          ),
-                        ),
-                        Icon(
-                          Icons.keyboard_arrow_right_outlined,
-                          color: Colors.blue,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            FutureBuilder<List<String>>(
-              future: _getResepBanner(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.hasError) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      alignment: Alignment.center,
-                      child: Text('Somethings wrong'),
+                    return CarouselSlider(
+                      items: snapshot.data!.map((url) {
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: EdgeInsets.symmetric(
+                                horizontal: 5.0,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                border: Border.all(
+                                  color: Colors.blue,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    10.0,
+                                  ),
+                                ),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    10,
+                                  ),
+                                ),
+                                child: Image.network(
+                                  url,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                    if (loadingProgress
+                                            ?.cumulativeBytesLoaded !=
+                                        loadingProgress?.expectedTotalBytes) {
+                                      return Align(
+                                        alignment: Alignment.center,
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    }
+
+                                    return child;
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }).toList(),
+                      options: CarouselOptions(
+                        autoPlay: true,
+                        pauseAutoPlayOnTouch: true,
+                        autoPlayCurve: Curves.fastOutSlowIn,
+                      ),
                     );
                   }
 
-                  return CarouselSlider(
-                    items: snapshot.data!.map((url) {
-                      return Builder(
-                        builder: (BuildContext context) {
-                          return Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: EdgeInsets.symmetric(
-                              horizontal: 5.0,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              border: Border.all(
-                                color: Colors.blue,
-                              ),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(
-                                  10.0,
-                                ),
-                              ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(
-                                  10,
-                                ),
-                              ),
-                              child: Image.network(
-                                url,
-                                fit: BoxFit.cover,
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                  if (loadingProgress?.cumulativeBytesLoaded !=
-                                      loadingProgress?.expectedTotalBytes) {
-                                    return Align(
-                                      alignment: Alignment.center,
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }
-
-                                  return child;
-                                },
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    }).toList(),
-                    options: CarouselOptions(
-                      autoPlay: true,
-                      pauseAutoPlayOnTouch: true,
-                      autoPlayCurve: Curves.fastOutSlowIn,
+                  return Center(
+                    child: Container(
+                      width: 70,
+                      height: 70,
+                      child: CircularProgressIndicator(
+                        color: Colors.blue,
+                      ),
                     ),
                   );
-                }
-
-                return Center(
-                  child: Container(
-                    width: 70,
-                    height: 70,
-                    child: CircularProgressIndicator(
-                      color: Colors.blue,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
