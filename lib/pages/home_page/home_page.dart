@@ -31,6 +31,14 @@ class _HomePageState extends State<HomePage> {
   void _navigateToProductListPage(
     KategoriProductListPage kategoriProduk,
   ) {
+    Navigator.pushNamed(context, '/productlist', arguments: <String, dynamic>{
+      'kategoriProduk': kategoriProduk,
+    }).then((_) => setState(() {}));
+  }
+
+  void _navigateToProductListPageWithPop(
+    KategoriProductListPage kategoriProduk,
+  ) {
     Navigator.pop(context);
     Navigator.pushNamed(context, '/productlist', arguments: <String, dynamic>{
       'kategoriProduk': kategoriProduk,
@@ -244,7 +252,7 @@ class _HomePageState extends State<HomePage> {
                         FontAwesome.food,
                         color: Colors.grey[400],
                       ),
-                      onTap: () => _navigateToProductListPage(
+                      onTap: () => _navigateToProductListPageWithPop(
                         KategoriProductListPage.All,
                       ),
                     ),
@@ -256,7 +264,7 @@ class _HomePageState extends State<HomePage> {
                         RpgAwesome.meat,
                         color: Colors.pink[300],
                       ),
-                      onTap: () => _navigateToProductListPage(
+                      onTap: () => _navigateToProductListPageWithPop(
                         KategoriProductListPage.Daging,
                       ),
                     ),
@@ -268,7 +276,7 @@ class _HomePageState extends State<HomePage> {
                         FontAwesome5.carrot,
                         color: Colors.orange,
                       ),
-                      onTap: () => _navigateToProductListPage(
+                      onTap: () => _navigateToProductListPageWithPop(
                         KategoriProductListPage.Sayur,
                       ),
                     ),
@@ -280,7 +288,7 @@ class _HomePageState extends State<HomePage> {
                         FontAwesome5.apple_alt,
                         color: Colors.red,
                       ),
-                      onTap: () => _navigateToProductListPage(
+                      onTap: () => _navigateToProductListPageWithPop(
                         KategoriProductListPage.Buah,
                       ),
                     ),
@@ -292,7 +300,7 @@ class _HomePageState extends State<HomePage> {
                         RpgAwesome.bubbling_potion,
                         color: Colors.brown[400],
                       ),
-                      onTap: () => _navigateToProductListPage(
+                      onTap: () => _navigateToProductListPageWithPop(
                         KategoriProductListPage.Rempah,
                       ),
                     ),
@@ -304,7 +312,7 @@ class _HomePageState extends State<HomePage> {
                         Linecons.food,
                         color: Colors.yellow[800],
                       ),
-                      onTap: () => _navigateToProductListPage(
+                      onTap: () => _navigateToProductListPageWithPop(
                         KategoriProductListPage.Paket,
                       ),
                     ),
