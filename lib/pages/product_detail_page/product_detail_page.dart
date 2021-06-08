@@ -105,17 +105,78 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
   Future<void> _refreshPage() async {}
 
-  // Future<void> _addToCart() async {
-  //   var email = fireAuth.currentUser!.email;
-  //   var query = firestore.collection('/users').where('email', isEqualTo: email);
-  //   List tempCheckoutItems = [];
-  //   await query.get().then((col) {
-  //     return col.docs.first;
-  //   }).then((user) {
-  //     tempCheckoutItems = (user.data()['current_checkout_items'] as List<Map<String, dynamic>>)
-  //     .where((i) => i.)
-  //   });
-  // }
+  /// untuk update banyak item, variable [product] dan [banyak] didapat
+  /// dari variabel kelas di paling atas.
+  Future<void> _updateCheckoutAmount() async {
+    print('amount updated');
+
+    // get user email
+    var email = fireAuth.currentUser!.email;
+    var query = firestore.collection('/users').where('email', isEqualTo: email);
+    List<CurrentCheckoutItem> tempCheckoutItems = [];
+
+    // ambil semua checkout item dulu
+    await query.get().then((col) => col.docs.first).then((user) async {
+      /// ambil semua item
+      var allCurrentCheckoutItems =
+          (user.data()['current_checkout_items'] as List)
+              .map((e) => CurrentCheckoutItem.fromJSON(e))
+              .toList();
+
+      /// cek apakah item ini sebelumnya tidak ada di checkout
+      if (!allCurrentCheckoutItems.any((e) => e.itemId == product.id)) {
+        /// jika nggak ada, tambahin itemnya
+        allCurrentCheckoutItems.add(
+          CurrentCheckoutItem(
+            itemId: product.id,
+            amount: banyak,
+          ),
+        );
+
+        var newCurrentCheckoutItems =
+            allCurrentCheckoutItems.map((e) => e.toJSON()).toList();
+
+        /// lalu update data [current_checkout_items] di firestore dengan array yang baru
+        await user.reference.update({
+          'current_checkout_items': newCurrentCheckoutItems,
+        });
+
+        /// lalu refresh halaman
+        setState(() {});
+
+        /// selesai
+        return;
+      }
+
+      /// ambil nilai amount dari item ini sebelumnya untuk ditambah
+      var amountItemSebelum = allCurrentCheckoutItems
+          .singleWhere((element) => element.itemId == product.id)
+          .amount;
+
+      /// ambil semua item dari allCheckoutItems kecuali item dengan id dari variable [product]
+      tempCheckoutItems =
+          allCurrentCheckoutItems.where((i) => i.itemId != product.id).toList();
+
+      /// tambahkan item checkout yang baru (dengan id sama tapi amount yang baru) ke variabel [tempCheckoutItems]
+      tempCheckoutItems.add(
+        CurrentCheckoutItem(
+          itemId: product.id,
+          amount: banyak + amountItemSebelum,
+        ),
+      );
+
+      /// buat tiap anggotanya ke bentuk map<string, dynamic> agar bisa di save ke firestore
+      var newCurrentCheckoutItems =
+          tempCheckoutItems.map((e) => e.toJSON()).toList();
+
+      /// lalu update data [current_checkout_items] di firestore dengan array yang baru
+      await user.reference.update({
+        'current_checkout_items': newCurrentCheckoutItems,
+      });
+    });
+
+    setState(() {});
+  }
 
   // build image di awal agar tidak refresh saat setState
   void _buildImage() {
@@ -345,7 +406,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                                 color: Colors.white,
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: _updateCheckoutAmount,
                           ),
                         ],
                       ),
