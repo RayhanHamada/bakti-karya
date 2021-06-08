@@ -1,5 +1,6 @@
 import 'package:badges/badges.dart';
 import 'package:bakti_karya/firebase.dart';
+import 'package:bakti_karya/models/CurrentCheckoutItem.dart';
 import 'package:bakti_karya/models/Product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_number_picker/flutter_number_picker.dart';
@@ -88,7 +89,33 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     });
   }
 
+  Future<num> _fetchShoppingAmounts() {
+    return firestore
+        .collection('/users')
+        .where('email', isEqualTo: fireAuth.currentUser!.email)
+        .get()
+        .then(
+          (col) => (col.docs.first.data()['current_checkout_items'] as List)
+              .fold<num>(
+            0,
+            (prev, curr) => prev + curr['amount'],
+          ),
+        );
+  }
+
   Future<void> _refreshPage() async {}
+
+  // Future<void> _addToCart() async {
+  //   var email = fireAuth.currentUser!.email;
+  //   var query = firestore.collection('/users').where('email', isEqualTo: email);
+  //   List tempCheckoutItems = [];
+  //   await query.get().then((col) {
+  //     return col.docs.first;
+  //   }).then((user) {
+  //     tempCheckoutItems = (user.data()['current_checkout_items'] as List<Map<String, dynamic>>)
+  //     .where((i) => i.)
+  //   });
+  // }
 
   // build image di awal agar tidak refresh saat setState
   void _buildImage() {
@@ -355,13 +382,22 @@ class _ProductDetailPageState extends State<ProductDetailPage>
         IconButton(
           onPressed: () {},
           icon: Badge(
-            badgeContent: Text('0'),
+            badgeContent: FutureBuilder(
+              future: _fetchShoppingAmounts(),
+              builder: (_, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Text('${snapshot.hasData ? snapshot.data : 0}');
+                }
+
+                return Text('${snapshot.hasData ? snapshot.data : 0}');
+              },
+            ),
             child: Icon(
               Icons.shopping_cart_outlined,
               color: Colors.blue,
             ),
           ),
-        )
+        ),
       ],
     );
   }
