@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart';
+import 'package:bakti_karya/components/shopping_cart_button.dart';
 import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/models/CurrentCheckoutItem.dart';
 import 'package:bakti_karya/models/Product.dart';
@@ -64,6 +64,10 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
   void _backToCatalog() {
     Navigator.pop(context);
+  }
+
+  Future<void> _navigateToCheckoutPage() async {
+    await Navigator.pushNamed(context, '/checkout_page');
   }
 
   Future<String> _fetchImageUrl() {
@@ -492,24 +496,8 @@ class _ProductDetailPageState extends State<ProductDetailPage>
         overflow: TextOverflow.fade,
       ),
       actions: <Widget>[
-        IconButton(
-          onPressed: () {},
-          icon: Badge(
-            badgeContent: FutureBuilder(
-              future: _fetchShoppingAmounts(),
-              builder: (_, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return Text('${snapshot.hasData ? snapshot.data : 0}');
-                }
-
-                return Text('${snapshot.hasData ? snapshot.data : 0}');
-              },
-            ),
-            child: Icon(
-              Icons.shopping_cart_outlined,
-              color: Colors.blue,
-            ),
-          ),
+        ShoppingCartButton(
+          onPressed: _navigateToCheckoutPage,
         ),
       ],
     );

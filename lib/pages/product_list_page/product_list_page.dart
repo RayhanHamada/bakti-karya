@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart';
+import 'package:bakti_karya/components/shopping_cart_button.dart';
 import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/pages/product_list_page/product_grid_view.dart';
 import 'package:bakti_karya/utils.dart';
@@ -173,18 +173,8 @@ class _ProductListPageState extends State<ProductListPage>
         ),
       ),
       actions: <Widget>[
-        FutureBuilder(
-          future: _fetchShoppingAmounts(),
-          builder: (_, snapshot) => IconButton(
-            onPressed: _navigateToCheckoutPage,
-            icon: Badge(
-              badgeContent: Text('${snapshot.data}'),
-              child: Icon(
-                Icons.shopping_cart_outlined,
-                color: Colors.blue,
-              ),
-            ),
-          ),
+        ShoppingCartButton(
+          onPressed: _navigateToCheckoutPage,
         ),
       ],
     );
