@@ -40,10 +40,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
           .doc(item.itemId)
           .get()
           .then(
-            (doc) => Product.fromJSON(<String, dynamic>{
-              ...doc.data()!,
-              'id': item.itemId,
-            }),
+            (doc) => Product.fromJSON(
+              <String, dynamic>{
+                ...doc.data()!,
+                'id': item.itemId,
+              },
+            ),
           )
           .then(
         (product) async {
@@ -64,14 +66,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
           checkoutItemData.photoDownloadURL = photoDownloadURL;
 
-          _c.add(checkoutItemData);
+          if (mounted) {
+            // kalau selesai langsung setState agar halaman refresh
+            setState(() {
+              _currentCheckoutItemDatas.add(checkoutItemData);
+            });
+          }
         },
       );
-
-      // kalau selesai langsung setState agar halaman refresh
-      setState(() {
-        _currentCheckoutItemDatas = _c;
-      });
     });
   }
 
