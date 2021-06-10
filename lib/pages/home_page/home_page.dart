@@ -765,7 +765,9 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () => _navigateToProductListPage(
+                        KategoriProductListPage.Paket,
+                      ),
                       child: Row(
                         children: [
                           Text(
