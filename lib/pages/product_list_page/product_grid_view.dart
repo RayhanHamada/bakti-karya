@@ -67,16 +67,15 @@ class _ProductGridViewState extends State<ProductGridView> {
 
     print('snapshot length => ${snapshot.docs.length}');
     products = snapshot.docs.map((doc) {
+      var rawDoc = doc.data();
       var docData = <String, dynamic>{
         'id': doc.reference.id,
-        ...doc.data(),
+        ...rawDoc,
       };
 
-      print('id => ${docData["id"]}');
-      if (docData['category'] == 'paket')
-        return PackageProduct.fromJson(docData);
+      var product = Product.fromJSON(docData);
 
-      return Product.fromJson(docData);
+      return product;
     }).toList();
 
     return products;

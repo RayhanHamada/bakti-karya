@@ -7,10 +7,12 @@ enum KategoriProduct {
 }
 
 class Product {
-  final KategoriProduct? kategoriProduct;
+  final KategoriProduct kategoriProduct;
   final String id, nama, photoName, deskripsi;
   final num harga;
   final num promo;
+  String recipeId = '';
+  List<String> bahan = [], langkah = [];
 
   Product({
     required this.id,
@@ -22,7 +24,7 @@ class Product {
     required this.promo,
   });
 
-  factory Product.fromJson(Map<String, dynamic> map) {
+  factory Product.fromJSON(Map<String, dynamic> map) {
     return Product(
       id: map['id'],
       nama: map['nama'],
@@ -31,10 +33,10 @@ class Product {
       photoName: map['photo_name'],
       kategoriProduct: stringToKategori(map['category']),
       promo: map['promo'],
-    );
+    )..recipeId = map['resep_id'] ?? '';
   }
 
-  static KategoriProduct? stringToKategori(String kategori) {
+  static KategoriProduct stringToKategori(String kategori) {
     var kategoriMap = <String, KategoriProduct>{
       'daging': KategoriProduct.Daging,
       'buah': KategoriProduct.Buah,
@@ -45,13 +47,14 @@ class Product {
 
     if (!kategoriMap.keys.toList().any((e) => e == kategori)) {
       throw Error.safeToString(
-          'invalid kategori, must be one if these: ${kategoriMap.keys}');
+        'invalid kategori, must be one if these: ${kategoriMap.keys}',
+      );
     }
 
-    return kategoriMap[kategori];
+    return kategoriMap[kategori]!;
   }
 
-  static String? kategoriToString(KategoriProduct kategoriProduct) {
+  static String kategoriToString(KategoriProduct kategoriProduct) {
     var kategoriMap = <KategoriProduct, String>{
       KategoriProduct.Daging: 'daging',
       KategoriProduct.Buah: 'buah',
@@ -60,47 +63,12 @@ class Product {
       KategoriProduct.Paket: 'paket',
     };
 
-    return kategoriMap[kategoriProduct];
-  }
-}
+    if (!kategoriMap.keys.toList().any((e) => e == kategoriProduct)) {
+      throw Error.safeToString(
+        'invalid kategori, must be one if these: ${kategoriMap.keys.map((e) => e.toString())}',
+      );
+    }
 
-mixin Recipe {
-  String recipeId = '';
-  List<String> bahan = [], langkah = [];
-}
-
-class PackageProduct extends Product with Recipe {
-  PackageProduct({
-    required String id,
-    required String nama,
-    KategoriProduct? kategoriProduct,
-    required String deskripsi,
-    required String photoName,
-    required num harga,
-    required num promo,
-    required String recipeId,
-  }) : super(
-          id: id,
-          nama: nama,
-          kategoriProduct: kategoriProduct,
-          deskripsi: deskripsi,
-          photoName: photoName,
-          harga: harga,
-          promo: promo,
-        ) {
-    this.recipeId = recipeId;
-  }
-
-  factory PackageProduct.fromJson(Map<String, dynamic> map) {
-    return PackageProduct(
-      id: map['id'],
-      nama: map['nama'],
-      deskripsi: map['deskripsi'],
-      harga: map['harga'],
-      photoName: map['photo_name'],
-      kategoriProduct: Product.stringToKategori(map['category']),
-      promo: map['promo'],
-      recipeId: map['resep_id'],
-    );
+    return kategoriMap[kategoriProduct]!;
   }
 }

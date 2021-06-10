@@ -40,7 +40,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           .doc(item.itemId)
           .get()
           .then(
-            (doc) => Product.fromJson(<String, dynamic>{
+            (doc) => Product.fromJSON(<String, dynamic>{
               ...doc.data()!,
               'id': item.itemId,
             }),
@@ -54,7 +54,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
           // ambil data download url
           var photoName = product.photoName;
-          var kategori = Product.kategoriToString(product.kategoriProduct!)!;
+          var kategori = Product.kategoriToString(product.kategoriProduct);
 
           var refURL =
               'gs://bakti-karya.appspot.com/app/foto_produk/$kategori/$photoName';

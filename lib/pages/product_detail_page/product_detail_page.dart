@@ -50,6 +50,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     super.initState();
     _checkoutAnimationController.forward(from: 0);
     _buildImage();
+    _fetchResep();
   }
 
   num hargaTotal() =>
@@ -76,17 +77,23 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   }
 
   // dipanggil hanya jika product merupakan product paket (mempunyai resep)
-  Future<void> _getResep() async {
-    var data = await firestore
-        .collection('/resep')
-        .doc(product.id)
-        .get()
-        .then((doc) => doc.data()!);
+  Future<void> _fetchResep() async {
+    if (product.recipeId.isNotEmpty) {
+      await firestore
+          .collection('/resep')
+          .doc(product.recipeId)
+          .get()
+          .then((doc) {
+        var data = doc.data()!;
 
-    setState(() {
-      (product as PackageProduct).bahan = data['bahan'];
-      (product as PackageProduct).langkah = data['langkah'];
-    });
+        setState(() {
+          product.bahan =
+              List.from(data['bahan']).map((e) => e.toString()).toList();
+          product.langkah =
+              List.from(data['langkah']).map((e) => e.toString()).toList();
+        });
+      });
+    }
   }
 
   Future<num> _fetchShoppingAmounts() {
@@ -295,7 +302,8 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                     ),
                   ),
 
-                  if (product is PackageProduct) ...<Widget>[
+                  if (product.kategoriProduct ==
+                      KategoriProduct.Paket) ...<Widget>[
                     /// deskripsi
                     Padding(
                       padding: const EdgeInsets.only(
@@ -311,6 +319,50 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                         ),
                       ),
                     ),
+                    ...product.bahan.asMap().entries.map(
+                          (e) => Padding(
+                            padding: const EdgeInsets.only(
+                              top: 5.0,
+                              left: 20,
+                            ),
+                            child: Text(
+                              '${e.key + 1}.\t\t${e.value}',
+                              style: TextStyle(
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                    /// langkah
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 10,
+                        left: 20,
+                      ),
+                      child: Text(
+                        'Langkah',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    ...product.langkah.asMap().entries.map(
+                          (e) => Padding(
+                            padding: const EdgeInsets.only(
+                              top: 10.0,
+                              left: 20,
+                            ),
+                            child: Text(
+                              '${e.key + 1}.\t\t${e.value}',
+                              style: TextStyle(
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ),
                   ],
                   SizedBox(
                     height: 130,
@@ -346,7 +398,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
+                    children: <Widget>[
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -415,7 +467,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
