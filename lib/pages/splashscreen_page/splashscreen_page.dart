@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bakti_karya/firebase.dart';
-import 'package:bakti_karya/pages/login_page/login_page.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreenPage extends StatefulWidget {

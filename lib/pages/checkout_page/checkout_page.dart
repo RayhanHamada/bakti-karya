@@ -32,8 +32,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
 
     // setelah ambil currentCheckoutItems, bikin semua jadi currentCheckoutItemDatas
-    List<CurrentCheckoutItemData> _c = [];
-
     currentCheckoutItems.forEach((item) async {
       await firestore
           .collection('/products')

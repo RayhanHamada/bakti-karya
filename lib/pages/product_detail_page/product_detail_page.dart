@@ -100,20 +100,6 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     }
   }
 
-  Future<num> _fetchShoppingAmounts() {
-    return firestore
-        .collection('/users')
-        .where('email', isEqualTo: fireAuth.currentUser!.email)
-        .get()
-        .then(
-          (col) => (col.docs.first.data()['current_checkout_items'] as List)
-              .fold<num>(
-            0,
-            (prev, curr) => prev + curr['amount'],
-          ),
-        );
-  }
-
   Future<void> _refreshPage() async {}
 
   /// untuk update banyak item, variable [product] dan [banyak] didapat
