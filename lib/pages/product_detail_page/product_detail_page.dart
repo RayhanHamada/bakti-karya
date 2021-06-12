@@ -121,7 +121,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
               .map((e) => CurrentCheckoutItem.fromJSON(e))
               .toList();
 
-      /// cek apakah item ini sebelumnya tidak ada di checkout
+      /// cek apakah item ini sebelumnya tidak ada di allCurrentCheckoutItems
       if (!allCurrentCheckoutItems.any((e) => e.itemId == product.id)) {
         /// jika nggak ada, tambahin itemnya
         allCurrentCheckoutItems.add(
@@ -145,6 +145,8 @@ class _ProductDetailPageState extends State<ProductDetailPage>
         /// selesai
         return;
       }
+
+      /// tapi jika item sudah ada di allCheckoutItems, tinggal tambahin amountnya ke firestore
 
       /// ambil nilai amount dari item ini sebelumnya untuk ditambah
       var amountItemSebelum = allCurrentCheckoutItems
