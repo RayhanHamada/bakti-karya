@@ -1,5 +1,6 @@
 import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/models/Product.dart';
+import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
 
 class ProductTile extends StatefulWidget {
@@ -190,7 +191,7 @@ class _ProductTileState extends State<ProductTile> {
                       ),
                     ),
                     Text(
-                      'Rp. ${product.harga}',
+                      '${rupiahFormatter.format(product.harga)}',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -207,7 +208,7 @@ class _ProductTileState extends State<ProductTile> {
                 bottom: 20.0,
               ),
               child: Text(
-                'Rp. ${hargaSetelahDiskon()}',
+                '${rupiahFormatter.format(hargaSetelahDiskon())}',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

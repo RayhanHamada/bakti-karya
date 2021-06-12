@@ -1,4 +1,5 @@
 import 'package:bakti_karya/pages/product_list_page/product_list_page.dart';
+import 'package:intl/intl.dart';
 
 /// untuk kategori di page [ProductListPage]
 enum KategoriProductListPage {
@@ -21,3 +22,7 @@ int? kategoriToInt(KategoriProductListPage kategoriProduk) {
     KategoriProductListPage.Paket: 5
   }[kategoriProduk];
 }
+
+var rupiahFormatter = NumberFormat.simpleCurrency(
+  locale: 'id_ID',
+);

@@ -2,6 +2,7 @@ import 'package:bakti_karya/components/shopping_cart_button.dart';
 import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/models/CurrentCheckoutItem.dart';
 import 'package:bakti_karya/models/Product.dart';
+import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_number_picker/flutter_number_picker.dart';
 
@@ -401,7 +402,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                             ),
                           ),
                           Text(
-                            'Rp. ${hargaTotal()}',
+                            '${rupiahFormatter.format(hargaTotal())}',
                             style: TextStyle(
                               color: Colors.blue,
                               fontSize: 22,

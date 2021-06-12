@@ -2,6 +2,7 @@ import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/models/CurrentCheckoutItem.dart';
 import 'package:bakti_karya/models/CurrentCheckoutItemData.dart';
 import 'package:bakti_karya/models/Product.dart';
+import 'package:bakti_karya/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_number_picker/flutter_number_picker.dart';
@@ -239,7 +240,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                   ),
                   subtitle: Text(
-                    '${itemData.product.harga}',
+                    '${rupiahFormatter.format(itemData.product.harga)}',
                     style: TextStyle(
                       color: Colors.blue,
                     ),
@@ -312,7 +313,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ),
                     ),
                     Text(
-                      'Rp. ${_hargaTotal(_currentCheckoutItemDatas)}',
+                      '${rupiahFormatter.format(_hargaTotal(_currentCheckoutItemDatas))}',
                       style: TextStyle(
                         fontSize: 18,
                       ),
