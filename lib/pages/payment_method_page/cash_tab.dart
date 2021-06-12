@@ -1,5 +1,5 @@
-import 'package:bakti_karya/firebase.dart';
-import 'package:bakti_karya/models/UserData.dart';
+// import 'package:bakti_karya/firebase.dart';
+// import 'package:bakti_karya/models/UserData.dart';
 import 'package:flutter/material.dart';
 
 class CashTab extends StatefulWidget {
@@ -10,23 +10,23 @@ class CashTab extends StatefulWidget {
 }
 
 class _CashTabState extends State<CashTab> {
-  Future<String> _fetchAlamat() async {
-    var email = fireAuth.currentUser!.email;
-    var query = firestore.collection('/users').where(
-          'email',
-          isEqualTo: email,
-        );
+  // Future<String> _fetchAlamat() async {
+  //   var email = fireAuth.currentUser!.email;
+  //   var query = firestore.collection('/users').where(
+  //         'email',
+  //         isEqualTo: email,
+  //       );
 
-    var alamat = '';
+  //   var alamat = '';
 
-    await query
-        .get()
-        .then((col) => col.docs.first)
-        .then((doc) => UserData.fromJSON(doc.data()))
-        .then((user) => alamat = user.alamat);
+  //   await query
+  //       .get()
+  //       .then((col) => col.docs.first)
+  //       .then((doc) => UserData.fromJSON(doc.data()))
+  //       .then((user) => alamat = user.alamat);
 
-    return alamat;
-  }
+  //   return alamat;
+  // }
 
   @override
   Widget build(BuildContext context) {
