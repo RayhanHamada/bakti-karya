@@ -84,7 +84,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     List<CurrentCheckoutItem> tempCheckoutItems = [];
 
     // ambil semua checkout item dulu
-    await query.get().then((col) => col.docs.first).then((user) {
+    await query.get().then((col) => col.docs.first).then((user) async {
       /// ambil semua item kecuali item dengan id dari variable [item]
       tempCheckoutItems = (user.data()['current_checkout_items'] as List)
           .map((e) => CurrentCheckoutItem.fromJSON(e))
@@ -104,17 +104,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
           tempCheckoutItems.map((e) => e.toJSON()).toList();
 
       /// lalu update data [current_checkout_items] di firestore dengan array yang baru
-      user.reference.update({
+      await user.reference.update({
         'current_checkout_items': newCurrentCheckoutItems,
       });
-    });
-
-    /// jika sukses, maka update juga banyak [item] di UI (agar total harga ter-update juga)
-    setState(() {
-      _currentCheckoutItemDatas
-          .where((e) => e.product.id == item.product.id)
-          .first
-          .amount = banyak;
+    }).then((value) {
+      /// jika sukses, maka update juga banyak [item] di UI (agar total harga ter-update juga)
+      setState(() {
+        _currentCheckoutItemDatas
+            .where((e) => e.product.id == item.product.id)
+            .first
+            .amount = banyak;
+      });
     });
   }
 
