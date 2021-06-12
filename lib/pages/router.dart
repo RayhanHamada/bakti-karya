@@ -2,6 +2,7 @@ import 'package:bakti_karya/pages/checkout_page/checkout_page.dart';
 import 'package:bakti_karya/pages/home_page/home_page.dart';
 import 'package:bakti_karya/pages/login_page/login_page.dart';
 import 'package:bakti_karya/pages/me_page/me_page.dart';
+import 'package:bakti_karya/pages/payment_method_page/payment_method_page.dart';
 import 'package:bakti_karya/pages/product_detail_page/product_detail_page.dart';
 import 'package:bakti_karya/pages/product_list_page/product_list_page.dart';
 import 'package:bakti_karya/pages/register_page/register_page.dart';
@@ -46,6 +47,10 @@ Route? onGenerateRoute(RouteSettings settings) {
     case '/checkout_page':
       return MaterialPageRoute(
         builder: (_) => CheckoutPage(),
+      );
+    case '/payment_method_page':
+      return MaterialPageRoute(
+        builder: (_) => PaymentMethodPage(),
       );
     default:
       return null;

@@ -160,8 +160,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return;
   }
 
-  void _navigateToPaymentPage(List<CurrentCheckoutItemData> items) {
+  void _navigateToPaymentPage() {
     // TODO: pindah ke halaman bayar
+    Navigator.pushNamed(context, '/payment_method_page')
+        .then((_) => setState(() {}));
   }
 
   // untuk hitung total harga dari item-item yang di checkout
@@ -326,7 +328,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         color: Colors.white,
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: _navigateToPaymentPage,
                     color: Theme.of(context).buttonColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
