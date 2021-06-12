@@ -46,33 +46,31 @@ class _CheckoutPageState extends State<CheckoutPage> {
               },
             ),
           )
-          .then(
-        (product) async {
-          var checkoutItemData = CurrentCheckoutItemData(
-            product: product,
-            amount: item.amount,
-          );
+          .then((product) async {
+        var checkoutItemData = CurrentCheckoutItemData(
+          product: product,
+          amount: item.amount,
+        );
 
-          // ambil data download url
-          var photoName = product.photoName;
-          var kategori = Product.kategoriToString(product.kategoriProduct);
+        // ambil data download url
+        var photoName = product.photoName;
+        var kategori = Product.kategoriToString(product.kategoriProduct);
 
-          var refURL =
-              'gs://bakti-karya.appspot.com/app/foto_produk/$kategori/$photoName';
+        var refURL =
+            'gs://bakti-karya.appspot.com/app/foto_produk/$kategori/$photoName';
 
-          var photoDownloadURL =
-              await firestorage.refFromURL(refURL).getDownloadURL();
+        var photoDownloadURL =
+            await firestorage.refFromURL(refURL).getDownloadURL();
 
-          checkoutItemData.photoDownloadURL = photoDownloadURL;
+        checkoutItemData.photoDownloadURL = photoDownloadURL;
 
-          if (mounted) {
-            // kalau selesai langsung setState agar halaman refresh
-            setState(() {
-              _currentCheckoutItemDatas.add(checkoutItemData);
-            });
-          }
-        },
-      );
+        if (mounted) {
+          // kalau selesai langsung setState agar halaman refresh
+          setState(() {
+            _currentCheckoutItemDatas.add(checkoutItemData);
+          });
+        }
+      });
     });
   }
 
@@ -149,13 +147,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
           SetOptions(
             merge: true,
           ));
-    });
-
-    /// jika sukses, maka update juga [item] yang dipesan di UI (agar total harga ter-update juga)
-    setState(() {
-      _currentCheckoutItemDatas = _currentCheckoutItemDatas
-          .where((e) => e.product.id == item.product.id)
-          .toList();
+    }).then((value) {
+      /// update [item] yang dipesan di UI (agar total harga ter-update juga)
+      setState(() {
+        _currentCheckoutItemDatas = _currentCheckoutItemDatas
+            .where((e) => e.product.id != item.product.id)
+            .toList();
+      });
     });
 
     return;
