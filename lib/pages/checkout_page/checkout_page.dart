@@ -159,15 +159,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return;
   }
 
-  void _navigateToPaymentPage() {
-    // TODO: pindah ke halaman bayar
+  void _navigateToPaymentMethodPage() {
     Navigator.pushNamed(context, '/payment_method_page')
         .then((_) => setState(() {}));
   }
 
+  num _hargaSetelahDiskon(Product product) =>
+      product.harga - product.harga * product.promo;
+
   // untuk hitung total harga dari item-item yang di checkout
-  num _hargaTotal(List<CurrentCheckoutItemData> _c) =>
-      _c.fold(0, (prev, curr) => prev + curr.product.harga * curr.amount);
+  num _hargaTotal(List<CurrentCheckoutItemData> _c) => _c.fold(
+        0,
+        (prev, curr) => prev + _hargaSetelahDiskon(curr.product) * curr.amount,
+      );
 
   @override
   void initState() {
@@ -238,7 +242,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                   ),
                   subtitle: Text(
-                    '${rupiahFormatter.format(itemData.product.harga)}',
+                    '${rupiahFormatter.format(_hargaSetelahDiskon(itemData.product))}',
                     style: TextStyle(
                       color: Colors.blue,
                     ),
@@ -327,10 +331,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         color: Colors.white,
                       ),
                     ),
-                    onPressed: _navigateToPaymentPage,
+                    onPressed: _currentCheckoutItemDatas.isNotEmpty
+                        ? _navigateToPaymentMethodPage
+                        : null,
                     color: Theme.of(context).buttonColor,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
                     ),
                   ),
                 ),
