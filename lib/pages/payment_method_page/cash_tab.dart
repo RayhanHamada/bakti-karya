@@ -1,5 +1,6 @@
 // import 'package:bakti_karya/firebase.dart';
 // import 'package:bakti_karya/models/UserData.dart';
+import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
 
 class CashTab extends StatefulWidget {
@@ -10,8 +11,11 @@ class CashTab extends StatefulWidget {
 }
 
 class _CashTabState extends State<CashTab> {
-  void _navigateToConfirmationPage() {
-    Navigator.pushNamed(context, '/confirmation_page');
+  void _navigateToSuccessBuyPage() {
+    Navigator.pushNamed(context, '/success_buy_page',
+        arguments: <String, dynamic>{
+          'paymentMethod': PaymentMethod.Cash,
+        });
   }
 
   @override
@@ -45,7 +49,7 @@ class _CashTabState extends State<CashTab> {
                   color: Colors.white,
                 ),
               ),
-              onPressed: _navigateToConfirmationPage,
+              onPressed: _navigateToSuccessBuyPage,
             ),
           ),
         ],

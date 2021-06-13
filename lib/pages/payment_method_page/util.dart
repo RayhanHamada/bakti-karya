@@ -1,7 +1,4 @@
-enum Bank {
-  BNI,
-  BCA,
-}
+import 'package:bakti_karya/utils.dart';
 
 List<String> constructSteps(Bank bank) {
   var bankName = bank.toString().replaceFirst(r'Bank.', '');

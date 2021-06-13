@@ -9,6 +9,7 @@ import 'package:bakti_karya/pages/product_detail_page/product_detail_page.dart';
 import 'package:bakti_karya/pages/product_list_page/product_list_page.dart';
 import 'package:bakti_karya/pages/register_page/register_page.dart';
 import 'package:bakti_karya/pages/splashscreen_page/splashscreen_page.dart';
+import 'package:bakti_karya/pages/success_buy_page/success_buy_page.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -61,6 +62,17 @@ Route? onGenerateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (_) => ConfirmationPage(
           checkoutItemDatas: checkoutItemDatas,
+        ),
+      );
+    case '/success_buy_page':
+      var args = (settings.arguments as Map<String, dynamic>);
+      var paymentMethod = args['paymentMethod'] as PaymentMethod;
+      var bank = args['bank'];
+
+      return MaterialPageRoute(
+        builder: (_) => SuccessBuyPage(
+          paymentMethod: paymentMethod,
+          bank: bank,
         ),
       );
     default:

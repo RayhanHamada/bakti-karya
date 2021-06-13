@@ -26,3 +26,13 @@ int? kategoriToInt(KategoriProductListPage kategoriProduk) {
 var rupiahFormatter = NumberFormat.simpleCurrency(
   locale: 'id_ID',
 );
+
+enum Bank {
+  BNI,
+  BCA,
+}
+
+enum PaymentMethod {
+  VirtualAccount,
+  Cash,
+}

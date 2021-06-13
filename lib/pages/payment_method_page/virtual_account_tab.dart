@@ -1,9 +1,6 @@
-import 'dart:math';
-
 import 'package:bakti_karya/pages/payment_method_page/util.dart';
+import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class VirtualAccountTab extends StatefulWidget {
   const VirtualAccountTab({Key? key}) : super(key: key);
@@ -14,19 +11,6 @@ class VirtualAccountTab extends StatefulWidget {
 
 class _VirtualAccountTabState extends State<VirtualAccountTab> {
   Bank? _currentBank = Bank.BNI;
-  late String _currentVirtualAccountNumber;
-
-  void _copyToClipBoard() {
-    Clipboard.setData(
-      ClipboardData(
-        text: _currentVirtualAccountNumber,
-      ),
-    );
-
-    Fluttertoast.showToast(
-      msg: 'Copied !',
-    );
-  }
 
   void _setBank(Bank? bank) {
     setState(() {
@@ -34,20 +18,20 @@ class _VirtualAccountTabState extends State<VirtualAccountTab> {
     });
   }
 
-  String _getRandom16Digit() {
-    return '0000' +
-        List<int>.generate(12, (index) => Random().nextInt(9))
-            .fold('', (p, e) => '$p$e');
-  }
-
-  void _navigateToConfirmationPage() {
-    Navigator.pushNamed(context, '/confirmation_page');
+  void _navigateToSuccessBuyPage() {
+    Navigator.pushNamed(
+      context,
+      '/success_buy_page',
+      arguments: <String, dynamic>{
+        'paymentMethod': PaymentMethod.VirtualAccount,
+        'bank': _currentBank,
+      },
+    );
   }
 
   @override
   void initState() {
     super.initState();
-    _currentVirtualAccountNumber = _getRandom16Digit();
   }
 
   @override
@@ -147,31 +131,6 @@ class _VirtualAccountTabState extends State<VirtualAccountTab> {
               ),
             ),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.only(
-          //     top: 20.0,
-          //   ),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     children: <Widget>[
-          //       Text(
-          //         _currentVirtualAccountNumber,
-          //         style: TextStyle(
-          //           color: Colors.blue,
-          //           fontSize: 24,
-          //         ),
-          //       ),
-          //       IconButton(
-          //         onPressed: _copyToClipBoard,
-          //         icon: Icon(
-          //           Icons.copy,
-          //           color: Colors.blue,
-          //         ),
-          //         splashColor: Colors.blue,
-          //       ),
-          //     ],
-          //   ),
-          // ),
           Spacer(),
           Container(
             margin: const EdgeInsets.only(
@@ -186,7 +145,7 @@ class _VirtualAccountTabState extends State<VirtualAccountTab> {
                   color: Colors.white,
                 ),
               ),
-              onPressed: _navigateToConfirmationPage,
+              onPressed: _navigateToSuccessBuyPage,
             ),
           ),
         ],
