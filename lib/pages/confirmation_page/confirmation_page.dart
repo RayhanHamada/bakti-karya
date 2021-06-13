@@ -25,7 +25,6 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   });
 
   final List<CurrentCheckoutItemData> checkoutItemDatas;
-  late UserData? _userData;
 
   void _goBack() {
     Navigator.pop(context);
