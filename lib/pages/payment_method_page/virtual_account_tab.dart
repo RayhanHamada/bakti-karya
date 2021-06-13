@@ -1,3 +1,6 @@
+import 'package:bakti_karya/firebase.dart';
+import 'package:bakti_karya/models/CheckoutHistoryItem.dart';
+import 'package:bakti_karya/models/UserData.dart';
 import 'package:bakti_karya/pages/payment_method_page/util.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +30,31 @@ class _VirtualAccountTabState extends State<VirtualAccountTab> {
         'bank': _currentBank,
       },
     );
+  }
+
+  Future<void> _createCheckoutHistory() async {
+    var email = fireAuth.currentUser!.email;
+    var userQuery = firestore.collection('/users').where(
+          'email',
+          isEqualTo: email,
+        );
+
+    var checkoutHistoryQuery = firestore.collection('checkoutHistory');
+
+    await userQuery.get().then((col) => col.docs.first).then((doc) async {
+      var user = UserData.fromJSON(doc.data());
+
+      var checkoutItems = user.checkoutItems;
+      var dtNow = DateTime.now();
+
+      var checkoutItemHistory = CheckoutHistoryItem(
+        userId: doc.id,
+        time: dtNow,
+        checkoutItems: checkoutItems,
+      );
+
+      await checkoutHistoryQuery.add(checkoutItemHistory.toJSON());
+    });
   }
 
   @override
