@@ -40,6 +40,10 @@ class _VirtualAccountTabState extends State<VirtualAccountTab> {
             .fold('', (p, e) => '$p$e');
   }
 
+  void _navigateToConfirmationPage() {
+    Navigator.pushNamed(context, '/confirmation_page');
+  }
+
   @override
   void initState() {
     super.initState();
@@ -170,7 +174,7 @@ class _VirtualAccountTabState extends State<VirtualAccountTab> {
                   color: Colors.white,
                 ),
               ),
-              onPressed: () {},
+              onPressed: _navigateToConfirmationPage,
             ),
           ),
         ],

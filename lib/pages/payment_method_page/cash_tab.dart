@@ -10,23 +10,9 @@ class CashTab extends StatefulWidget {
 }
 
 class _CashTabState extends State<CashTab> {
-  // Future<String> _fetchAlamat() async {
-  //   var email = fireAuth.currentUser!.email;
-  //   var query = firestore.collection('/users').where(
-  //         'email',
-  //         isEqualTo: email,
-  //       );
-
-  //   var alamat = '';
-
-  //   await query
-  //       .get()
-  //       .then((col) => col.docs.first)
-  //       .then((doc) => UserData.fromJSON(doc.data()))
-  //       .then((user) => alamat = user.alamat);
-
-  //   return alamat;
-  // }
+  void _navigateToConfirmationPage() {
+    Navigator.pushNamed(context, '/confirmation_page');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +23,6 @@ class _CashTabState extends State<CashTab> {
         right: 10.0,
       ),
       child: Column(
-        // mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
             'Pesanan dibayarkan saat produk sampai pada alamat pengiriman.',
@@ -60,36 +45,9 @@ class _CashTabState extends State<CashTab> {
                   color: Colors.white,
                 ),
               ),
-              onPressed: () {},
+              onPressed: _navigateToConfirmationPage,
             ),
           ),
-
-          // Padding(
-          //   padding: const EdgeInsets.only(
-          //     top: 20.0,
-          //   ),
-          //   child: FutureBuilder<String>(
-          //     future: _fetchAlamat(),
-          //     builder: (_, snapshot) {
-          //       if (snapshot.connectionState == ConnectionState.done) {
-          //         return Text(
-          //           snapshot.hasData ? snapshot.data! : '',
-          //           style: TextStyle(
-          //             color: Colors.blue,
-          //             fontSize: 18,
-          //             fontWeight: FontWeight.bold,
-          //           ),
-          //         );
-          //       }
-
-          //       return Center(
-          //         child: Container(
-          //           child: CircularProgressIndicator(),
-          //         ),
-          //       );
-          //     },
-          //   ),
-          // ),
         ],
       ),
     );
