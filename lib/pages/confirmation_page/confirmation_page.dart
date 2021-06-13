@@ -4,6 +4,7 @@ import 'package:bakti_karya/models/Product.dart';
 import 'package:bakti_karya/models/UserData.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ConfirmationPage extends StatefulWidget {
   const ConfirmationPage({
@@ -25,14 +26,17 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   });
 
   final List<CurrentCheckoutItemData> checkoutItemDatas;
+  final DateTime dtNow = DateTime.now();
 
   void _goBack() {
     Navigator.pop(context);
   }
 
   void _navigateToPaymentMethodPage() {
-    Navigator.pushNamed(context, '/payment_method_page')
-        .then((_) => setState(() {}));
+    Navigator.pushNamed(
+      context,
+      '/payment_method_page',
+    ).then((_) => setState(() {}));
   }
 
   Future<UserData> _getUserData() async {
@@ -233,6 +237,39 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
 
                 return CircularProgressIndicator();
               },
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20.0,
+                  ),
+                  child: Text(
+                    'Tanggal :',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18,
+                      // fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20.0,
+                  ),
+                  child: Text(
+                    DateFormat('dd MMMM yyyy').format(dtNow),
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 3,
+                    overflow: TextOverflow.fade,
+                  ),
+                ),
+              ],
             ),
             Container(
               height: 40,
