@@ -159,9 +159,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return;
   }
 
-  void _navigateToPaymentMethodPage() {
-    Navigator.pushNamed(context, '/payment_method_page')
-        .then((_) => setState(() {}));
+  void _navigateToConfirmationPage() {
+    Navigator.pushNamed(context, '/confirmation_page',
+        arguments: <String, dynamic>{
+          'checkoutItemDatas': _currentCheckoutItemDatas,
+        });
   }
 
   num _hargaSetelahDiskon(Product product) =>
@@ -332,7 +334,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ),
                     ),
                     onPressed: _currentCheckoutItemDatas.isNotEmpty
-                        ? _navigateToPaymentMethodPage
+                        ? _navigateToConfirmationPage
                         : null,
                     color: Theme.of(context).buttonColor,
                     shape: RoundedRectangleBorder(
