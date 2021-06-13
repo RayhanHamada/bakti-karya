@@ -137,29 +137,41 @@ class _VirtualAccountTabState extends State<VirtualAccountTab> {
               .toList(),
           Padding(
             padding: const EdgeInsets.only(
-              top: 20.0,
+              top: 5.0,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  _currentVirtualAccountNumber,
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 24,
-                  ),
-                ),
-                IconButton(
-                  onPressed: _copyToClipBoard,
-                  icon: Icon(
-                    Icons.copy,
-                    color: Colors.blue,
-                  ),
-                  splashColor: Colors.blue,
-                ),
-              ],
+            child: Text(
+              '* Catatan: Pembayaran harus dilakukan 1X24 jam setelah nomor virtual account diterbitkan.',
+              style: TextStyle(
+                color: Colors.blue,
+                fontSize: 15,
+              ),
             ),
           ),
+          // Padding(
+          //   padding: const EdgeInsets.only(
+          //     top: 20.0,
+          //   ),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: <Widget>[
+          //       Text(
+          //         _currentVirtualAccountNumber,
+          //         style: TextStyle(
+          //           color: Colors.blue,
+          //           fontSize: 24,
+          //         ),
+          //       ),
+          //       IconButton(
+          //         onPressed: _copyToClipBoard,
+          //         icon: Icon(
+          //           Icons.copy,
+          //           color: Colors.blue,
+          //         ),
+          //         splashColor: Colors.blue,
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Spacer(),
           Container(
             margin: const EdgeInsets.only(
@@ -169,7 +181,7 @@ class _VirtualAccountTabState extends State<VirtualAccountTab> {
             child: MaterialButton(
               color: Colors.blue,
               child: Text(
-                'Lanjutkan',
+                'Konfirmasi Pembelian',
                 style: TextStyle(
                   color: Colors.white,
                 ),
