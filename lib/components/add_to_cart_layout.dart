@@ -1,5 +1,5 @@
 import 'package:bakti_karya/firebase.dart';
-import 'package:bakti_karya/models/CurrentCheckoutItem.dart';
+import 'package:bakti_karya/models/CheckoutItem.dart';
 import 'package:bakti_karya/models/Product.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
@@ -55,21 +55,21 @@ class _AddToCartLayoutState extends State<AddToCartLayout> {
           isEqualTo: email,
         );
 
-    List<CurrentCheckoutItem> tempCheckoutItems = [];
+    List<CheckoutItem> tempCheckoutItems = [];
 
     /// ambil semua checkout item dulu
     await query.get().then((col) => col.docs.first).then((user) async {
       /// ambil semua item
       var allCurrentCheckoutItems =
           (user.data()['current_checkout_items'] as List)
-              .map((e) => CurrentCheckoutItem.fromJSON(e))
+              .map((e) => CheckoutItem.fromJSON(e))
               .toList();
 
       /// cek apakah item ini sebelumnya tidak ada di allCurrentCheckoutItems
       if (!allCurrentCheckoutItems.any((e) => e.itemId == product.id)) {
         /// jika nggak ada, tambahin itemnya
         allCurrentCheckoutItems.add(
-          CurrentCheckoutItem(
+          CheckoutItem(
             itemId: product.id,
             amount: banyak,
           ),
@@ -103,7 +103,7 @@ class _AddToCartLayoutState extends State<AddToCartLayout> {
 
         /// tambahkan item checkout yang baru (dengan id sama tapi amount yang baru) ke variabel [tempCheckoutItems]
         tempCheckoutItems.add(
-          CurrentCheckoutItem(
+          CheckoutItem(
             itemId: product.id,
             amount: banyak + amountItemSebelum,
           ),

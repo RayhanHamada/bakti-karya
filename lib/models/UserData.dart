@@ -1,4 +1,4 @@
-import 'package:bakti_karya/models/CurrentCheckoutItem.dart';
+import 'package:bakti_karya/models/CheckoutItem.dart';
 
 /// model data untuk collection [users] di firestore
 class UserData {
@@ -15,14 +15,14 @@ class UserData {
         noHp: map['no_hp'],
         alamat: map['alamat'],
       )..checkoutItems = (map['current_checkout_items'] as List<dynamic>)
-          .map((e) => CurrentCheckoutItem.fromJSON(e))
+          .map((e) => CheckoutItem.fromJSON(e))
           .toList();
 
   final String email;
   String name;
   String noHp;
   String alamat;
-  List<CurrentCheckoutItem> checkoutItems = [];
+  List<CheckoutItem> checkoutItems = [];
 
   Map<String, dynamic> toJSON() {
     return {

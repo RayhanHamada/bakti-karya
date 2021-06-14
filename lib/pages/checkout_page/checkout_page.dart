@@ -1,6 +1,6 @@
 import 'package:bakti_karya/firebase.dart';
-import 'package:bakti_karya/models/CurrentCheckoutItem.dart';
-import 'package:bakti_karya/models/CurrentCheckoutItemData.dart';
+import 'package:bakti_karya/models/CheckoutItem.dart';
+import 'package:bakti_karya/models/CheckoutItemData.dart';
 import 'package:bakti_karya/models/Product.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,12 +13,12 @@ class CheckoutPage extends StatefulWidget {
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
-  List<CurrentCheckoutItemData> _currentCheckoutItemDatas = [];
+  List<CheckoutItemData> _currentCheckoutItemDatas = [];
 
   // untuk ambil data checkout awal dan pada saat refresh halaman
   Future<void> _fetchCurrentCheckoutData() async {
     // ambil current_checkout_item dari user saat ini
-    List<CurrentCheckoutItem> currentCheckoutItems = [];
+    List<CheckoutItem> currentCheckoutItems = [];
 
     await firestore
         .collection('/users')
@@ -28,7 +28,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       (col) {
         var datas = col.docs.first.data()['current_checkout_items'] as List;
         currentCheckoutItems =
-            datas.map((e) => CurrentCheckoutItem.fromJSON(e)).toList();
+            datas.map((e) => CheckoutItem.fromJSON(e)).toList();
       },
     );
 
@@ -47,7 +47,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             ),
           )
           .then((product) async {
-        var checkoutItemData = CurrentCheckoutItemData(
+        var checkoutItemData = CheckoutItemData(
           product: product,
           amount: item.amount,
         );
@@ -75,25 +75,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   // untuk update banyak item
-  Future<void> _updateCheckoutAmount(
-      CurrentCheckoutItemData item, int banyak) async {
+  Future<void> _updateCheckoutAmount(CheckoutItemData item, int banyak) async {
     print('amount updated');
     // get user email
     var email = fireAuth.currentUser!.email;
     var query = firestore.collection('/users').where('email', isEqualTo: email);
-    List<CurrentCheckoutItem> tempCheckoutItems = [];
+    List<CheckoutItem> tempCheckoutItems = [];
 
     // ambil semua checkout item dulu
     await query.get().then((col) => col.docs.first).then((user) async {
       /// ambil semua item kecuali item dengan id dari variable [item]
       tempCheckoutItems = (user.data()['current_checkout_items'] as List)
-          .map((e) => CurrentCheckoutItem.fromJSON(e))
+          .map((e) => CheckoutItem.fromJSON(e))
           .where((i) => i.itemId != item.product.id)
           .toList();
 
       // tambahkan item checkout yang baru (dengan id sama tapi amount yang baru) ke variabel tempCheckoutItems
       tempCheckoutItems.add(
-        CurrentCheckoutItem(
+        CheckoutItem(
           itemId: item.product.id,
           amount: banyak,
         ),
@@ -119,7 +118,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   /// untuk remove item checkout dari firestore (saat swipe item ke samping)
-  Future<void> _removeItem(CurrentCheckoutItemData item) async {
+  Future<void> _removeItem(CheckoutItemData item) async {
     // ambil user email user
     var email = fireAuth.currentUser!.email;
 
@@ -131,7 +130,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       // ambil data current_checkout_items dari data user
       var currentCheckoutItems =
           List.from(user.data()['current_checkout_items'])
-              .map((e) => CurrentCheckoutItem.fromJSON(e))
+              .map((e) => CheckoutItem.fromJSON(e))
               .toList();
 
       /// bikin data [current_checkout_items] yang baru, tanpa item dengan id dari variable [item] (dibuang)
@@ -170,7 +169,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       product.harga - product.harga * product.promo;
 
   // untuk hitung total harga dari item-item yang di checkout
-  num _hargaTotal(List<CurrentCheckoutItemData> _c) => _c.fold(
+  num _hargaTotal(List<CheckoutItemData> _c) => _c.fold(
         0,
         (prev, curr) => prev + _hargaSetelahDiskon(curr.product) * curr.amount,
       );

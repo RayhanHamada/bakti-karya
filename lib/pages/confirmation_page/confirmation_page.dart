@@ -1,5 +1,5 @@
 import 'package:bakti_karya/firebase.dart';
-import 'package:bakti_karya/models/CurrentCheckoutItemData.dart';
+import 'package:bakti_karya/models/CheckoutItemData.dart';
 import 'package:bakti_karya/models/Product.dart';
 import 'package:bakti_karya/models/UserData.dart';
 import 'package:bakti_karya/utils.dart';
@@ -12,7 +12,7 @@ class ConfirmationPage extends StatefulWidget {
     required this.checkoutItemDatas,
   }) : super(key: key);
 
-  final List<CurrentCheckoutItemData> checkoutItemDatas;
+  final List<CheckoutItemData> checkoutItemDatas;
 
   @override
   _ConfirmationPageState createState() => _ConfirmationPageState(
@@ -25,7 +25,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
     required this.checkoutItemDatas,
   });
 
-  final List<CurrentCheckoutItemData> checkoutItemDatas;
+  final List<CheckoutItemData> checkoutItemDatas;
   final DateTime dtNow = DateTime.now();
 
   void _goBack() {
@@ -51,7 +51,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
 
   num _hargaSetelahDiskon(Product p) => p.harga - p.harga * p.promo;
 
-  num _hargaTotalCheckoutItem(CurrentCheckoutItemData c) =>
+  num _hargaTotalCheckoutItem(CheckoutItemData c) =>
       _hargaSetelahDiskon(c.product) * c.amount;
 
   num _hargaTotalCheckoutItems() =>

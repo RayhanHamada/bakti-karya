@@ -1,4 +1,4 @@
-import 'package:bakti_karya/models/CurrentCheckoutItem.dart';
+import 'package:bakti_karya/models/CheckoutItem.dart';
 import 'package:bakti_karya/utils.dart';
 
 enum StatusCheckoutHistoryItem {
@@ -21,7 +21,7 @@ class CheckoutHistoryItem {
   String? id = '';
   final String userId;
   final DateTime time;
-  final List<CurrentCheckoutItem> checkoutItems;
+  final List<CheckoutItem> checkoutItems;
   StatusCheckoutHistoryItem status;
   final PaymentMethod paymentMethod;
 
@@ -34,7 +34,7 @@ class CheckoutHistoryItem {
         userId: map['user_id'],
         time: DateTime.fromMillisecondsSinceEpoch(map['time']),
         checkoutItems: (map['checkout_items'] as List)
-            .map((e) => CurrentCheckoutItem.fromJSON(e))
+            .map((e) => CheckoutItem.fromJSON(e))
             .toList(),
         status: stringToStatus(map['status']),
         paymentMethod: stringToPaymentMethod(map['payment_method']),

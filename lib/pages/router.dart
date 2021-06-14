@@ -1,4 +1,4 @@
-import 'package:bakti_karya/models/CurrentCheckoutItemData.dart';
+import 'package:bakti_karya/models/CheckoutItemData.dart';
 import 'package:bakti_karya/pages/checkout_page/checkout_page.dart';
 import 'package:bakti_karya/pages/confirmation_page/confirmation_page.dart';
 import 'package:bakti_karya/pages/home_page/home_page.dart';
@@ -59,7 +59,7 @@ Route? onGenerateRoute(RouteSettings settings) {
     case '/confirmation_page':
       var args = (settings.arguments as Map<String, dynamic>);
       var checkoutItemDatas =
-          args['checkoutItemDatas'] as List<CurrentCheckoutItemData>;
+          args['checkoutItemDatas'] as List<CheckoutItemData>;
       return MaterialPageRoute(
         builder: (_) => ConfirmationPage(
           checkoutItemDatas: checkoutItemDatas,
