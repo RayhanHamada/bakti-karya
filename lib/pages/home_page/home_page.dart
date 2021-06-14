@@ -49,6 +49,10 @@ class _HomePageState extends State<HomePage> {
     Navigator.pushNamed(context, '/checkout_page').then((_) => setState(() {}));
   }
 
+  void _navigateToTransactionHistory() {
+    Navigator.pushNamed(context, '/transaction_history_page');
+  }
+
   void _logout() async {
     await showDialog(
       context: context,
@@ -325,7 +329,7 @@ class _HomePageState extends State<HomePage> {
                     Icons.money,
                     color: Colors.blue,
                   ),
-                  onTap: () {},
+                  onTap: _navigateToTransactionHistory,
                 ),
                 Divider(
                   thickness: 1.5,

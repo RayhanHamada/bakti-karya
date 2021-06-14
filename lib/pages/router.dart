@@ -10,6 +10,7 @@ import 'package:bakti_karya/pages/product_list_page/product_list_page.dart';
 import 'package:bakti_karya/pages/register_page/register_page.dart';
 import 'package:bakti_karya/pages/splashscreen_page/splashscreen_page.dart';
 import 'package:bakti_karya/pages/success_buy_page/success_buy_page.dart';
+import 'package:bakti_karya/pages/transaction_history_page/transaction_history_page.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -72,6 +73,11 @@ Route? onGenerateRoute(RouteSettings settings) {
         builder: (_) => SuccessBuyPage(
           checkoutHistoryItemId: checkoutHistoryItemId,
         ),
+      );
+
+    case '/transaction_history_page':
+      return MaterialPageRoute(
+        builder: (_) => TransactionHistoryPage(),
       );
     default:
       return null;
