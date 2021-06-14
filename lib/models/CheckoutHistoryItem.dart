@@ -18,6 +18,7 @@ class CheckoutHistoryItem {
     this.bank,
   });
 
+  String? id = '';
   final String userId;
   final DateTime time;
   final List<CurrentCheckoutItem> checkoutItems;
@@ -39,7 +40,7 @@ class CheckoutHistoryItem {
         paymentMethod: stringToPaymentMethod(map['payment_method']),
         noVirtualAccount: map['no_vc'],
         bank: stringToBank(map['bank']),
-      );
+      )..id = map['id'];
 
   Map<String, dynamic> toJSON() => {
         'user_id': userId,

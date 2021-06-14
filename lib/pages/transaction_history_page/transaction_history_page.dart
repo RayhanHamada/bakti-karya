@@ -1,6 +1,8 @@
 import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/models/CheckoutHistoryItem.dart';
+import 'package:bakti_karya/models/Product.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TransactionHistoryPage extends StatefulWidget {
   const TransactionHistoryPage({Key? key}) : super(key: key);
@@ -23,12 +25,22 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
         .then((col) => col.docs.first)
         .then((doc) => doc.reference.id);
 
-    var transactionHistoryQuery = firestore
-        .collection('/checkoutHistories')
-        .where('user_id', isEqualTo: userId);
+    /// bikin query transaction history
+    var transactionHistoryQuery =
+        firestore.collection('/checkoutHistories').where(
+              'user_id',
+              isEqualTo: userId,
+            );
 
-    return await transactionHistoryQuery.get().then((col) =>
-        col.docs.map((e) => CheckoutHistoryItem.fromJSON(e.data())).toList());
+    var transactionHistory =
+        await transactionHistoryQuery.get().then((col) => col.docs
+            .map((e) => CheckoutHistoryItem.fromJSON(<String, dynamic>{
+                  ...e.data(),
+                  'id': e.reference.id,
+                }))
+            .toList());
+
+    return transactionHistory;
   }
 
   void _goBack() {
@@ -66,14 +78,41 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
     return SingleChildScrollView(
       child: FutureBuilder<List<CheckoutHistoryItem>>(
         future: _getCheckoutHistoryItems(),
-        builder: (_, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
+        builder: (_, s1) {
+          if (s1.connectionState == ConnectionState.done) {
+            if (s1.hasData) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: snapshot.data!
+                children: s1.data!
                     .map(
-                      (e) => ListTile(),
+                      (e) => Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black,
+                          ),
+                        ),
+                        child: ListTile(
+                          title: Text(
+                            'Order ${e.id}',
+                            style: TextStyle(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          subtitle: Text(
+                            'Status: ${CheckoutHistoryItem.statusToString(e.status)}',
+                            style: TextStyle(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          trailing: Text(
+                            DateFormat('dd/MM/yy').format(e.time),
+                            style: TextStyle(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          onTap: () {},
+                        ),
+                      ),
                     )
                     .toList(),
               );
@@ -83,10 +122,20 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CircularProgressIndicator(),
+                Text(
+                  'Something is wrong !',
+                ),
               ],
             );
           }
+
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+            ],
+          );
         },
       ),
     );
