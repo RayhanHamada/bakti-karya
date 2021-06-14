@@ -1,5 +1,5 @@
-import 'dart:math';
-
+import 'package:bakti_karya/firebase.dart';
+import 'package:bakti_karya/models/CheckoutHistoryItem.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,41 +9,32 @@ import 'package:fluttertoast/fluttertoast.dart';
 class SuccessBuyPage extends StatefulWidget {
   const SuccessBuyPage({
     Key? key,
-    required this.paymentMethod,
-    this.bank,
+    required this.checkoutHistoryItemId,
   }) : super(key: key);
 
-  final PaymentMethod paymentMethod;
-  final Bank? bank;
+  final String checkoutHistoryItemId;
 
   @override
   _SuccessBuyPageState createState() => _SuccessBuyPageState(
-        paymentMethod: paymentMethod,
-        bank: bank,
+        checkoutHistoryItemId: checkoutHistoryItemId,
       );
 }
 
 class _SuccessBuyPageState extends State<SuccessBuyPage> {
   _SuccessBuyPageState({
-    required this.paymentMethod,
-    this.bank,
+    required this.checkoutHistoryItemId,
   });
 
-  final PaymentMethod paymentMethod;
-  final Bank? bank;
+  final String checkoutHistoryItemId;
 
-  String _currentVirtualAccountNumber = '';
-
-  String _getRandom16Digit() {
-    return '0000' +
-        List<int>.generate(12, (index) => Random().nextInt(9))
-            .fold('', (p, e) => '$p$e');
+  void _goToHomePage() {
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
-  void _copyToClipBoard() {
+  void _copyToClipBoard(String content) {
     Clipboard.setData(
       ClipboardData(
-        text: _currentVirtualAccountNumber,
+        text: content,
       ),
     );
 
@@ -54,12 +45,21 @@ class _SuccessBuyPageState extends State<SuccessBuyPage> {
     );
   }
 
+  Future<CheckoutHistoryItem?> _getCheckoutHistoryItem() async {
+    var docRef =
+        firestore.collection('/checkoutHistories').doc(checkoutHistoryItemId);
+
+    return await docRef.get().then((d) {
+      if (d.exists) {
+        return CheckoutHistoryItem.fromJSON(d.data()!);
+      }
+      return null;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    setState(() {
-      _currentVirtualAccountNumber = _getRandom16Digit();
-    });
   }
 
   @override
@@ -74,111 +74,125 @@ class _SuccessBuyPageState extends State<SuccessBuyPage> {
       padding: const EdgeInsets.only(
         top: 40.0,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Icon(
-            FontAwesome.ok_circled,
-            color: Colors.blue,
-            size: 100,
-          ),
-          Center(
-            child: Text(
-              'Order Complete !',
-              style: TextStyle(
-                color: Colors.blue,
-                fontSize: 24,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 80,
-          ),
-          if (paymentMethod == PaymentMethod.VirtualAccount) ...<Widget>[
-            Center(
-              child: Text(
-                'No. Virtual Account (${bank.toString().replaceFirst('Bank.', '')})',
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 18,
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+      child: FutureBuilder<CheckoutHistoryItem?>(
+        future: _getCheckoutHistoryItem(),
+        builder: (_, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (!snapshot.hasData) return Text('Something Wrong');
+            var item = snapshot.data!;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Text(
-                  _currentVirtualAccountNumber,
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.blue,
+                Icon(
+                  FontAwesome.ok_circled,
+                  color: Colors.blue,
+                  size: 100,
+                ),
+                Center(
+                  child: Text(
+                    'Order Complete !',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 24,
+                    ),
                   ),
                 ),
-                IconButton(
-                  onPressed: _copyToClipBoard,
-                  icon: Icon(
-                    Icons.copy,
-                    color: Colors.blue,
+                SizedBox(
+                  height: 80,
+                ),
+                if (item.paymentMethod ==
+                    PaymentMethod.VirtualAccount) ...<Widget>[
+                  Center(
+                    child: Text(
+                      'No. Virtual Account (${item.bank})',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 18,
+                      ),
+                    ),
                   ),
-                  splashColor: Colors.blue,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        item.noVirtualAccount!,
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.blue,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () =>
+                            _copyToClipBoard(item.noVirtualAccount!),
+                        icon: Icon(
+                          Icons.copy,
+                          color: Colors.blue,
+                        ),
+                        splashColor: Colors.blue,
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 20.0,
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Status: ${CheckoutHistoryItem.statusToString(item.status)}',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+                if (item.paymentMethod !=
+                    PaymentMethod.VirtualAccount) ...<Widget>[
+                  Center(
+                    child: Text(
+                      'Barang akan dikirm ke alamat anda !',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      'Status: ${CheckoutHistoryItem.statusToString(item.status)}',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ],
+                Spacer(),
+                Container(
+                  margin: const EdgeInsets.only(
+                    bottom: 20.0,
+                    left: 10.0,
+                    right: 10.0,
+                  ),
+                  width: double.infinity,
+                  child: MaterialButton(
+                    color: Colors.blue,
+                    child: Text(
+                      'Kembali ke Beranda',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: _goToHomePage,
+                  ),
                 ),
               ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 20.0,
-              ),
-              child: Center(
-                child: Text(
-                  'Status: Menunggu Pembayaran',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-            ),
-          ],
-          if (paymentMethod != PaymentMethod.VirtualAccount) ...<Widget>[
-            Center(
-              child: Text(
-                'Barang akan dikirm ke alamat anda !',
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 18,
-                ),
-              ),
-            ),
-            Center(
-              child: Text(
-                'Status: Pesanan Diantarkan',
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          ],
-          Spacer(),
-          Container(
-            margin: const EdgeInsets.only(
-              bottom: 20.0,
-              left: 10.0,
-              right: 10.0,
-            ),
-            width: double.infinity,
-            child: MaterialButton(
-              color: Colors.blue,
-              child: Text(
-                'Kembali ke Beranda',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              onPressed: () {},
-            ),
-          ),
-        ],
+            );
+          }
+
+          return CircularProgressIndicator();
+        },
       ),
     );
   }

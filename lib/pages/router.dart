@@ -66,13 +66,11 @@ Route? onGenerateRoute(RouteSettings settings) {
       );
     case '/success_buy_page':
       var args = (settings.arguments as Map<String, dynamic>);
-      var paymentMethod = args['paymentMethod'] as PaymentMethod;
-      var bank = args['bank'];
+      var checkoutHistoryItemId = args['checkoutHistoryItemId'] as String;
 
       return MaterialPageRoute(
         builder: (_) => SuccessBuyPage(
-          paymentMethod: paymentMethod,
-          bank: bank,
+          checkoutHistoryItemId: checkoutHistoryItemId,
         ),
       );
     default:

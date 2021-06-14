@@ -21,39 +21,64 @@ class _VirtualAccountTabState extends State<VirtualAccountTab> {
     });
   }
 
-  void _navigateToSuccessBuyPage() {
-    Navigator.pushNamed(
+  void _navigateToSuccessBuyPage(String checkoutHistoryItemId) {
+    Navigator.pushNamedAndRemoveUntil(
       context,
       '/success_buy_page',
+      (_) => false,
       arguments: <String, dynamic>{
-        'paymentMethod': PaymentMethod.VirtualAccount,
-        'bank': _currentBank,
+        'checkoutHistoryItemId': checkoutHistoryItemId
       },
     );
   }
 
   Future<void> _createCheckoutHistory() async {
+    /// ambil email user
     var email = fireAuth.currentUser!.email;
+
+    /// bikin query untuk user dan checkoutHistory
     var userQuery = firestore.collection('/users').where(
           'email',
           isEqualTo: email,
         );
 
-    var checkoutHistoryQuery = firestore.collection('checkoutHistory');
+    var checkoutHistoryQuery = firestore.collection('/checkoutHistories');
 
-    await userQuery.get().then((col) => col.docs.first).then((doc) async {
+    /// ambil data user
+    await userQuery.get().then((col) => col.docs.first).then((doc) {
       var user = UserData.fromJSON(doc.data());
 
       var checkoutItems = user.checkoutItems;
       var dtNow = DateTime.now();
 
+      /// bikin CheckoutHistoryItem
       var checkoutItemHistory = CheckoutHistoryItem(
         userId: doc.id,
         time: dtNow,
         checkoutItems: checkoutItems,
+        status: StatusCheckoutHistoryItem.Menunggu_Pembayaran,
+        paymentMethod: PaymentMethod.VirtualAccount,
+        bank: _currentBank,
+        noVirtualAccount: getRandom16Digit(),
       );
 
-      await checkoutHistoryQuery.add(checkoutItemHistory.toJSON());
+      return checkoutItemHistory;
+    }).then((checkoutItemHistory) async {
+      /// tambahkan checkoutItemHistory ke collection checkoutItemHistories
+      await checkoutHistoryQuery
+          .add(checkoutItemHistory.toJSON())
+          .then((c) async {
+        /// lalu pada collection user,
+        await userQuery.get().then((col) => col.docs.first).then((doc) async {
+          /// kosongkan current_checkout_items
+          await doc.reference.update({
+            'current_checkout_items': [],
+          });
+        }).then((_) {
+          /// lalu navigate ke success_buy_page
+          _navigateToSuccessBuyPage(c.id);
+        });
+      });
     });
   }
 
@@ -173,7 +198,7 @@ class _VirtualAccountTabState extends State<VirtualAccountTab> {
                   color: Colors.white,
                 ),
               ),
-              onPressed: _navigateToSuccessBuyPage,
+              onPressed: _createCheckoutHistory,
             ),
           ),
         ],

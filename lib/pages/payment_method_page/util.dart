@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bakti_karya/utils.dart';
 
 List<String> constructSteps(Bank bank) {
@@ -9,4 +11,10 @@ List<String> constructSteps(Bank bank) {
     'Pada form, masukkan nomor virtual account yang dibuat setelah anda menekan tombol konfirmasi pembelian.',
     'Lalu konfirmasi dan selesaikan transaksi.',
   ];
+}
+
+String getRandom16Digit() {
+  return '0000' +
+      List<int>.generate(12, (index) => Random().nextInt(9))
+          .fold('', (p, e) => '$p$e');
 }

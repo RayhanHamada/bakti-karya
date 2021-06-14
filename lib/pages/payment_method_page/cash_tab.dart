@@ -1,5 +1,7 @@
-// import 'package:bakti_karya/firebase.dart';
-// import 'package:bakti_karya/models/UserData.dart';
+import 'package:bakti_karya/firebase.dart';
+import 'package:bakti_karya/models/CheckoutHistoryItem.dart';
+import 'package:bakti_karya/models/UserData.dart';
+
 import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -11,11 +13,60 @@ class CashTab extends StatefulWidget {
 }
 
 class _CashTabState extends State<CashTab> {
-  void _navigateToSuccessBuyPage() {
-    Navigator.pushNamed(context, '/success_buy_page',
+  void _navigateToSuccessBuyPage(String checkoutHistoryItemId) {
+    Navigator.pushNamedAndRemoveUntil(
+        context, '/success_buy_page', (_) => false,
         arguments: <String, dynamic>{
-          'paymentMethod': PaymentMethod.Cash,
+          'checkoutHistoryItemId': checkoutHistoryItemId
         });
+  }
+
+  Future<void> _createCheckoutHistory() async {
+    /// ambil email user
+    var email = fireAuth.currentUser!.email;
+
+    /// bikin query untuk user dan checkoutHistory
+    var userQuery = firestore.collection('/users').where(
+          'email',
+          isEqualTo: email,
+        );
+
+    var checkoutHistoryQuery = firestore.collection('/checkoutHistories');
+
+    /// ambil data user
+    await userQuery.get().then((col) => col.docs.first).then((doc) {
+      var user = UserData.fromJSON(doc.data());
+
+      var checkoutItems = user.checkoutItems;
+      var dtNow = DateTime.now();
+
+      /// bikin CheckoutHistoryItem
+      var checkoutItemHistory = CheckoutHistoryItem(
+        userId: doc.id,
+        time: dtNow,
+        checkoutItems: checkoutItems,
+        status: StatusCheckoutHistoryItem.Dikirim,
+        paymentMethod: PaymentMethod.Cash,
+      );
+
+      return checkoutItemHistory;
+    }).then((checkoutItemHistory) async {
+      /// tambahkan checkoutItemHistory ke collection checkoutItemHistories
+      await checkoutHistoryQuery
+          .add(checkoutItemHistory.toJSON())
+          .then((c) async {
+        /// lalu pada collection user,
+        await userQuery.get().then((col) => col.docs.first).then((doc) async {
+          /// kosongkan current_checkout_items
+          await doc.reference.update({
+            'current_checkout_items': [],
+          });
+        }).then((_) {
+          /// lalu navigate ke success_buy_page
+          _navigateToSuccessBuyPage(c.id);
+        });
+      });
+    });
   }
 
   @override
@@ -49,7 +100,7 @@ class _CashTabState extends State<CashTab> {
                   color: Colors.white,
                 ),
               ),
-              onPressed: _navigateToSuccessBuyPage,
+              onPressed: _createCheckoutHistory,
             ),
           ),
         ],
