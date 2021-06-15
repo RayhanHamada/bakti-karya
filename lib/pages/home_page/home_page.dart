@@ -1,7 +1,10 @@
 import 'package:bakti_karya/components/shopping_cart_button.dart';
 import 'package:bakti_karya/firebase.dart';
+import 'package:bakti_karya/models/PromoBanner.dart';
+import 'package:bakti_karya/models/RecipeBanner.dart';
 import 'package:bakti_karya/models/UserData.dart';
 import 'package:bakti_karya/utils.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
@@ -80,28 +83,23 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<List<String>> _getPromoBanner() async {
-    var bannerList = List<String>.from([]);
+  Future<List<PromoBanner>> _getPromoBanner() async {
+    List<PromoBanner> bannerList = [];
     // * uncomment line dibawah ini (buat hemat limit kuota firebase, sudah bisa)
-    // var collection = await firestore.collection('/promo_banners').get();
-
-    // collection.docs.forEach((doc) {
-    //   var data = doc.data();
-    //   bannerList.add(data['url']);
-    // });
+    var query = firestore.collection('/promo_banners');
+    bannerList = await query.get().then(
+        (col) => col.docs.map((e) => PromoBanner.fromJSON(e.data())).toList());
 
     return bannerList;
   }
 
-  Future<List<String>> _getResepBanner() async {
-    var bannerList = List<String>.from([]);
+  Future<List<RecipeBanner>> _getResepBanner() async {
+    List<RecipeBanner> bannerList = [];
     // * uncomment line dibawah ini (buat hemat limit kuota firebase, sudah bisa)
-    // var collection = await firestore.collection('/resep_banners').get();
+    // var query = firestore.collection('/resep_banners');
 
-    // collection.docs.forEach((doc) {
-    //   var data = doc.data();
-    //   bannerList.add(data['url']);
-    // });
+    // bannerList = await query.get().then(
+    //     (col) => col.docs.map((e) => RecipeBanner.fromJSON(e.data())).toList());
 
     return bannerList;
   }
@@ -399,7 +397,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              FutureBuilder<List<String>>(
+              FutureBuilder<List<PromoBanner>>(
                 future: _getPromoBanner(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
@@ -412,7 +410,7 @@ class _HomePageState extends State<HomePage> {
                     }
 
                     return CarouselSlider(
-                      items: snapshot.data!.map((url) {
+                      items: snapshot.data!.map((pb) {
                         return Builder(
                           builder: (BuildContext context) {
                             return Container(
@@ -438,22 +436,13 @@ class _HomePageState extends State<HomePage> {
                                     10,
                                   ),
                                 ),
-                                child: Image.network(
-                                  url,
+                                child: CachedNetworkImage(
+                                  imageUrl: pb.url,
+                                  placeholder: (_, __) => Align(
+                                    alignment: Alignment.center,
+                                    child: CircularProgressIndicator(),
+                                  ),
                                   fit: BoxFit.cover,
-                                  loadingBuilder:
-                                      (context, child, loadingProgress) {
-                                    if (loadingProgress
-                                            ?.cumulativeBytesLoaded !=
-                                        loadingProgress?.expectedTotalBytes) {
-                                      return Align(
-                                        alignment: Alignment.center,
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    }
-
-                                    return child;
-                                  },
                                 ),
                               ),
                             );
@@ -764,7 +753,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              FutureBuilder<List<String>>(
+              FutureBuilder<List<RecipeBanner>>(
                 future: _getResepBanner(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
@@ -777,7 +766,7 @@ class _HomePageState extends State<HomePage> {
                     }
 
                     return CarouselSlider(
-                      items: snapshot.data!.map((url) {
+                      items: snapshot.data!.map((rb) {
                         return Builder(
                           builder: (BuildContext context) {
                             return Container(
@@ -803,22 +792,13 @@ class _HomePageState extends State<HomePage> {
                                     10,
                                   ),
                                 ),
-                                child: Image.network(
-                                  url,
+                                child: CachedNetworkImage(
+                                  imageUrl: rb.url,
+                                  placeholder: (_, __) => Align(
+                                    alignment: Alignment.center,
+                                    child: CircularProgressIndicator(),
+                                  ),
                                   fit: BoxFit.cover,
-                                  loadingBuilder:
-                                      (context, child, loadingProgress) {
-                                    if (loadingProgress
-                                            ?.cumulativeBytesLoaded !=
-                                        loadingProgress?.expectedTotalBytes) {
-                                      return Align(
-                                        alignment: Alignment.center,
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    }
-
-                                    return child;
-                                  },
                                 ),
                               ),
                             );
