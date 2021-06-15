@@ -30,12 +30,13 @@ class _ProductTileState extends State<ProductTile> {
 
   Future<String> _fetchImageUrl() {
     // * uncomment these lines to fetch actual photo (ini di comment untuk hemat kuota firebase)
-    // return firestorage
-    //     .refFromURL(
-    //         'gs://bakti-karya.appspot.com/app/foto_produk/${Product.kategoriToString(product.kategoriProduct!)}/${product.photoName}')
-    //     .getDownloadURL();
+    var kategori = Product.kategoriToString(product.kategoriProduct);
+    var photoName = product.photoName;
+    var ref = firestorage.refFromURL(
+        'gs://bakti-karya.appspot.com/app/foto_produk/$kategori/$photoName');
+    return ref.getDownloadURL();
 
-    return Future.value('');
+    // return Future.value('');
   }
 
   int hargaSetelahDiskon() {
