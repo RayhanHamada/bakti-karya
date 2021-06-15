@@ -3,6 +3,7 @@ import 'package:bakti_karya/models/CheckoutItem.dart';
 /// model data untuk collection [users] di firestore
 class UserData {
   UserData({
+    this.id,
     required this.email,
     required this.name,
     required this.noHp,
@@ -10,6 +11,7 @@ class UserData {
   });
 
   factory UserData.fromJSON(Map<String, dynamic> map) => UserData(
+        id: map['id'],
         email: map['email'],
         name: map['name'],
         noHp: map['no_hp'],
@@ -18,6 +20,7 @@ class UserData {
           .map((e) => CheckoutItem.fromJSON(e))
           .toList();
 
+  String? id;
   final String email;
   String name;
   String noHp;
@@ -30,6 +33,7 @@ class UserData {
       'name': this.name,
       'no_hp': this.noHp,
       'alamat': this.alamat,
+      'current_checkout_items': checkoutItems,
     };
   }
 

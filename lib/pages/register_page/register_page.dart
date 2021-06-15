@@ -112,6 +112,8 @@ class _RegisterPageState extends State<RegisterPage> {
         alamat: alamat,
       );
 
+      userData.checkoutItems = [];
+
       try {
         setState(() {
           _isFetchingData = true;
@@ -135,7 +137,7 @@ class _RegisterPageState extends State<RegisterPage> {
       if (!_isErrorRegister) {
         await firestore
             .collection('/users')
-            .add(userData.forCreateToFirestore())
+            .add(userData.toJSON())
             .then((value) {
           setState(() {
             _fetchingMsg = 'Success Registering User !';
