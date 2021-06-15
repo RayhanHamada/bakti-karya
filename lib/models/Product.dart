@@ -11,7 +11,7 @@ class Product {
   final String id, nama, photoName, deskripsi;
   final num harga;
   final num promo;
-  String recipeId = '';
+  String? recipeId = '';
   List<String> bahan = [], langkah = [];
 
   Product({
@@ -22,6 +22,7 @@ class Product {
     required this.photoName,
     required this.harga,
     required this.promo,
+    this.recipeId,
   });
 
   factory Product.fromJSON(Map<String, dynamic> map) {
@@ -33,7 +34,8 @@ class Product {
       photoName: map['photo_name'],
       kategoriProduct: stringToKategori(map['category']),
       promo: map['promo'],
-    )..recipeId = map['resep_id'] ?? '';
+      recipeId: map['resep_id'],
+    );
   }
 
   static KategoriProduct stringToKategori(String kategori) {

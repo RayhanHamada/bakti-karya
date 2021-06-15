@@ -46,7 +46,10 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     super.initState();
     _checkoutAnimationController.forward(from: 0);
     _buildImage();
-    _fetchResep();
+
+    if (product.recipeId != null) {
+      _fetchResep();
+    }
   }
 
   void _backToCatalog() {
@@ -59,17 +62,19 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
   Future<String> _fetchImageUrl() {
     // * uncomment these lines to fetch actual photo (ini di comment untuk hemat kuota firebase)
-    // return firestorage
-    //     .refFromURL(
-    //         'gs://bakti-karya.appspot.com/app/foto_produk/${Product.kategoriToString(product.kategoriProduct!)}/${product.photoName}')
-    //     .getDownloadURL();
+    var kategori = Product.kategoriToString(product.kategoriProduct);
+    var photoName = product.photoName;
 
-    return Future.value('');
+    var ref = firestorage.refFromURL(
+      'gs://bakti-karya.appspot.com/app/foto_produk/$kategori/$photoName',
+    );
+
+    return ref.getDownloadURL();
   }
 
   // dipanggil hanya jika product merupakan product paket (mempunyai resep)
   Future<void> _fetchResep() async {
-    if (product.recipeId.isNotEmpty) {
+    if (product.recipeId != null) {
       await firestore
           .collection('/resep')
           .doc(product.recipeId)
@@ -99,20 +104,10 @@ class _ProductDetailPageState extends State<ProductDetailPage>
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {
-            if (snapshot.data!.isNotEmpty) {
-              return FittedBox(
-                fit: BoxFit.fill,
-                child: Image.network(
-                  snapshot.data!,
-                  fit: BoxFit.fill,
-                ),
-              );
-            }
-
             return FittedBox(
               fit: BoxFit.fill,
-              child: Image.asset(
-                'assets/logo.png',
+              child: Image.network(
+                snapshot.data!,
                 fit: BoxFit.fill,
               ),
             );
