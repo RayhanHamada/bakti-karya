@@ -5,6 +5,7 @@ class CheckoutItemData {
   CheckoutItemData({
     required this.product,
     required this.amount,
+    this.photoDownloadURL = '',
   });
 
   final Product product;

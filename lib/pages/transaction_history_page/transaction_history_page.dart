@@ -47,6 +47,16 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
     Navigator.pop(context);
   }
 
+  void _navigateToHistoryDetailPage(CheckoutHistoryItem checkoutHistoryItem) {
+    Navigator.pushNamed(
+      context,
+      '/transaction_history_detail_page',
+      arguments: <String, dynamic>{
+        'checkoutHistoryItem': checkoutHistoryItem,
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,7 +120,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
                               color: Colors.blue,
                             ),
                           ),
-                          onTap: () {},
+                          onTap: () => _navigateToHistoryDetailPage(e),
                         ),
                       ),
                     )
@@ -131,9 +141,11 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
 
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              CircularProgressIndicator(),
+              Center(
+                child: CircularProgressIndicator(),
+              ),
             ],
           );
         },

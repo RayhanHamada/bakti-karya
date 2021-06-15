@@ -1,17 +1,97 @@
+import 'package:bakti_karya/firebase.dart';
+import 'package:bakti_karya/models/CheckoutHistoryItem.dart';
+import 'package:bakti_karya/models/CheckoutItemData.dart';
+import 'package:bakti_karya/models/Product.dart';
 import 'package:bakti_karya/models/UserData.dart';
+import 'package:bakti_karya/utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class TransactionHistoryDetailPage extends StatefulWidget {
-  const TransactionHistoryDetailPage({Key? key}) : super(key: key);
+  const TransactionHistoryDetailPage({
+    Key? key,
+    required this.checkoutHistoryItem,
+  }) : super(key: key);
+
+  final CheckoutHistoryItem checkoutHistoryItem;
 
   @override
   _TransactionHistoryDetailPageState createState() =>
-      _TransactionHistoryDetailPageState();
+      _TransactionHistoryDetailPageState(
+        checkoutHistoryItem: checkoutHistoryItem,
+      );
 }
 
 class _TransactionHistoryDetailPageState
     extends State<TransactionHistoryDetailPage> {
-  // Future<UserData> _getUserData() async {}
+  _TransactionHistoryDetailPageState({required this.checkoutHistoryItem});
+
+  final CheckoutHistoryItem checkoutHistoryItem;
+
+  List<CheckoutItemData> _checkoutItemDatas = [];
+  late UserData? _userData;
+
+  void _goBack() {
+    Navigator.pop(context);
+  }
+
+  Future<void> _getUserData() async {
+    var query = firestore.collection('/users').doc(checkoutHistoryItem.userId);
+
+    await query.get().then((doc) {
+      setState(() {
+        _userData = UserData.fromJSON(doc.data()!);
+      });
+    });
+  }
+
+  Future<void> _getCheckoutItemDatas() async {
+    var checkoutItems = checkoutHistoryItem.checkoutItems;
+    var query = firestore.collection('products').where(FieldPath.documentId,
+        whereIn: checkoutItems.map((e) => e.itemId).toList());
+
+    /// ambil semua product di checkout, dan ubah ke CheckoutItemData
+
+    await query.get().then((col) => col.docs.asMap().entries.forEach(
+          (e) async {
+            var checkoutItemData = CheckoutItemData(
+              product: Product.fromJSON(
+                <String, dynamic>{
+                  'id': e.value.reference.id,
+                  ...e.value.data(),
+                },
+              ),
+              amount: checkoutItems[e.key].amount,
+            );
+
+            checkoutItemData.photoDownloadURL = await firestorage
+                .refFromURL(
+                    'gs://bakti-karya.appspot.com/app/foto_produk/${Product.kategoriToString(checkoutItemData.product.kategoriProduct)}/${checkoutItemData.product.photoName}')
+                .getDownloadURL();
+
+            print(checkoutItemData.photoDownloadURL);
+
+            setState(() {
+              _checkoutItemDatas.add(checkoutItemData);
+            });
+          },
+        ));
+  }
+
+  num _hargaSetelahDiskon(Product p) => p.harga - p.harga * p.promo;
+
+  num _hargaTotalCheckoutItem(CheckoutItemData c) =>
+      _hargaSetelahDiskon(c.product) * c.amount;
+
+  num _hargaTotalCheckoutItems(List<CheckoutItemData> checkoutItemDatas) =>
+      checkoutItemDatas.fold(0, (p, e) => p + _hargaTotalCheckoutItem(e));
+
+  @override
+  void initState() {
+    super.initState();
+    _getCheckoutItemDatas();
+    _getUserData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +102,289 @@ class _TransactionHistoryDetailPageState
   }
 
   PreferredSizeWidget _appBar() {
-    return AppBar();
+    return AppBar(
+      backgroundColor: Colors.white,
+      leading: IconButton(
+        onPressed: _goBack,
+        icon: Icon(
+          Icons.arrow_back_ios_new_outlined,
+          color: Colors.blue,
+        ),
+      ),
+      title: Text(
+        'Detail Transaksi',
+        style: TextStyle(
+          color: Colors.blue,
+        ),
+      ),
+    );
   }
 
   Widget _body() {
-    return Container();
+    var idOrder = checkoutHistoryItem.id;
+    var namaPembeli = _userData?.name ?? 'Mengambil data...';
+    var alamatPengiriman = _userData?.alamat ?? 'Mengambil data...';
+    var metodePembayaran = CheckoutHistoryItem.paymentMethodToString(
+      checkoutHistoryItem.paymentMethod,
+    );
+
+    var noVA = '(${CheckoutHistoryItem.bankToString(
+      checkoutHistoryItem.bank,
+    )!}) ${checkoutHistoryItem.noVirtualAccount}';
+
+    var status = CheckoutHistoryItem.statusToString(
+      checkoutHistoryItem.status,
+    ).replaceAll('_', ' ');
+
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 20.0,
+        left: 10.0,
+        right: 10.0,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(
+                bottom: 10.0,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'ID Order:',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18,
+                      // fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    idOrder!,
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                bottom: 10.0,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'Nama Pembeli:',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18,
+                      // fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    namaPembeli,
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      // fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                bottom: 10.0,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'Alamat Pengiriman: ',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18,
+                      // fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    alamatPengiriman,
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      // fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              'Item Pesanan',
+              style: TextStyle(
+                color: Colors.blue,
+                fontSize: 18,
+                // fontWeight: FontWeight.bold,
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                ..._checkoutItemDatas.map((e) {
+                  print('e => ${e.amount}');
+                  return ListTile(
+                    leading: Container(
+                      height: 40,
+                      width: 40,
+                      child: Image.network(e.photoDownloadURL),
+                    ),
+                    title: Text(
+                      '${e.product.nama} (x${e.amount})',
+                      style: TextStyle(
+                        color: Colors.blue,
+                      ),
+                    ),
+                    subtitle: Text(
+                      '${rupiahFormatter.format(_hargaSetelahDiskon(e.product))}',
+                      style: TextStyle(
+                        color: Colors.blue,
+                      ),
+                    ),
+                    trailing: Text(
+                      rupiahFormatter.format(_hargaTotalCheckoutItem(e)),
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                }).toList(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'Total Harga :',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 18,
+                        // fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      rupiahFormatter
+                          .format(_hargaTotalCheckoutItems(_checkoutItemDatas)),
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Container(
+              height: 1,
+              margin: const EdgeInsets.only(
+                top: 5.0,
+                bottom: 5.0,
+              ),
+              color: Colors.black,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 10.0,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'Metode Pembayaran: ',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18,
+                      // fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    metodePembayaran,
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      // fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 10.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Text(
+                    'No. Virtual Account: ',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18,
+                      // fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    noVA,
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      // fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 3,
+                    overflow: TextOverflow.fade,
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 10.0,
+                bottom: 10.0,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'Status: ',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18,
+                      // fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    status,
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      // fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
