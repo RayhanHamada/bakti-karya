@@ -360,7 +360,7 @@ class _HomePageState extends State<HomePage> {
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+            children: <Widget>[
               /// Section Promo and Deals
               Padding(
                 padding: const EdgeInsets.only(
@@ -368,7 +368,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                  children: <Widget>[
                     Text(
                       'Promo and Deals',
                       style: TextStyle(
@@ -380,7 +380,7 @@ class _HomePageState extends State<HomePage> {
                     TextButton(
                       onPressed: () {},
                       child: Row(
-                        children: [
+                        children: <Widget>[
                           Text(
                             'See All',
                             style: TextStyle(
@@ -478,7 +478,7 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.only(left: 10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                    children: <Widget>[
                       Text(
                         'Katalog',
                         style: TextStyle(
@@ -489,7 +489,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       TextButton(
                         child: Row(
-                          children: [
+                          children: <Widget>[
                             Text(
                               'See All',
                               style: TextStyle(
@@ -518,7 +518,7 @@ class _HomePageState extends State<HomePage> {
                   height: 100,
                   child: GridView.count(
                     crossAxisCount: 4,
-                    children: [
+                    children: <Widget>[
                       Container(
                         height: 70,
                         width: 70,
@@ -544,7 +544,7 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
+                              children: <Widget>[
                                 Icon(
                                   RpgAwesome.meat,
                                   color: Colors.pink[300],
@@ -588,7 +588,7 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
+                              children: <Widget>[
                                 Icon(
                                   FontAwesome5.carrot,
                                   color: Colors.orange,
@@ -632,7 +632,7 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
+                              children: <Widget>[
                                 Icon(
                                   FontAwesome5.apple_alt,
                                   color: Colors.red,
@@ -676,7 +676,7 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
+                              children: <Widget>[
                                 Icon(
                                   RpgAwesome.bubbling_potion,
                                   color: Colors.brown[400],
@@ -722,7 +722,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                  children: <Widget>[
                     Text(
                       'Temukan Resep',
                       style: TextStyle(
@@ -736,7 +736,7 @@ class _HomePageState extends State<HomePage> {
                         KategoriProductListPage.Paket,
                       ),
                       child: Row(
-                        children: [
+                        children: <Widget>[
                           Text(
                             'See All',
                             style: TextStyle(
