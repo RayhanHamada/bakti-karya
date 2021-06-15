@@ -1,6 +1,5 @@
 import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/models/CheckoutHistoryItem.dart';
-import 'package:bakti_karya/models/Product.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
