@@ -9,6 +9,7 @@ enum StatusCheckoutHistoryItem {
 
 class CheckoutHistoryItem {
   CheckoutHistoryItem({
+    this.id,
     required this.userId,
     required this.time,
     required this.checkoutItems,
@@ -18,7 +19,7 @@ class CheckoutHistoryItem {
     this.bank,
   });
 
-  String? id = '';
+  String? id;
   final String userId;
   final DateTime time;
   final List<CheckoutItem> checkoutItems;
@@ -31,6 +32,7 @@ class CheckoutHistoryItem {
 
   factory CheckoutHistoryItem.fromJSON(Map<String, dynamic> map) =>
       CheckoutHistoryItem(
+        id: map['id'],
         userId: map['user_id'],
         time: DateTime.fromMillisecondsSinceEpoch(map['time']),
         checkoutItems: (map['checkout_items'] as List)
@@ -40,7 +42,7 @@ class CheckoutHistoryItem {
         paymentMethod: stringToPaymentMethod(map['payment_method']),
         noVirtualAccount: map['no_vc'],
         bank: stringToBank(map['bank']),
-      )..id = map['id'];
+      );
 
   Map<String, dynamic> toJSON() => {
         'user_id': userId,
@@ -64,7 +66,7 @@ class CheckoutHistoryItem {
     return paymentMethodMap[paymentMethod]!;
   }
 
-  static Bank? stringToBank(String bank) {
+  static Bank? stringToBank(String? bank) {
     var bankMap = Bank.values.fold<Map<String, Bank>>(
         {},
         (p, e) => {

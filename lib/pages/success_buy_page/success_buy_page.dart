@@ -51,7 +51,10 @@ class _SuccessBuyPageState extends State<SuccessBuyPage> {
 
     return await docRef.get().then((d) {
       if (d.exists) {
-        return CheckoutHistoryItem.fromJSON(d.data()!);
+        return CheckoutHistoryItem.fromJSON({
+          'id': d.id,
+          ...d.data()!,
+        });
       }
       return null;
     });

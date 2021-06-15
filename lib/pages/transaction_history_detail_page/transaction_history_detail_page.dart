@@ -29,20 +29,16 @@ class _TransactionHistoryDetailPageState
   final CheckoutHistoryItem checkoutHistoryItem;
 
   List<CheckoutItemData> _checkoutItemDatas = [];
-  late UserData? _userData;
 
   void _goBack() {
     Navigator.pop(context);
   }
 
-  Future<void> _getUserData() async {
+  /// untuk ambil data user
+  Future<UserData> _getUserData() async {
     var query = firestore.collection('/users').doc(checkoutHistoryItem.userId);
 
-    await query.get().then((doc) {
-      setState(() {
-        _userData = UserData.fromJSON(doc.data()!);
-      });
-    });
+    return await query.get().then((doc) => UserData.fromJSON(doc.data()!));
   }
 
   Future<void> _getCheckoutItemDatas() async {
@@ -51,9 +47,9 @@ class _TransactionHistoryDetailPageState
         whereIn: checkoutItems.map((e) => e.itemId).toList());
 
     /// ambil semua product di checkout, dan ubah ke CheckoutItemData
-
     await query.get().then((col) => col.docs.asMap().entries.forEach(
           (e) async {
+            /// bikin item checkout disini
             var checkoutItemData = CheckoutItemData(
               product: Product.fromJSON(
                 <String, dynamic>{
@@ -64,12 +60,11 @@ class _TransactionHistoryDetailPageState
               amount: checkoutItems[e.key].amount,
             );
 
+            /// ambil url foto dari firebase storage
             checkoutItemData.photoDownloadURL = await firestorage
                 .refFromURL(
                     'gs://bakti-karya.appspot.com/app/foto_produk/${Product.kategoriToString(checkoutItemData.product.kategoriProduct)}/${checkoutItemData.product.photoName}')
                 .getDownloadURL();
-
-            print(checkoutItemData.photoDownloadURL);
 
             setState(() {
               _checkoutItemDatas.add(checkoutItemData);
@@ -78,11 +73,14 @@ class _TransactionHistoryDetailPageState
         ));
   }
 
+  /// untuk menghitung harga product setelah diskon
   num _hargaSetelahDiskon(Product p) => p.harga - p.harga * p.promo;
 
+  /// untuk menghitung harga product setelah diskon dikali banyak item
   num _hargaTotalCheckoutItem(CheckoutItemData c) =>
       _hargaSetelahDiskon(c.product) * c.amount;
 
+  /// untuk menghitung harga total semua item yang di checkout
   num _hargaTotalCheckoutItems(List<CheckoutItemData> checkoutItemDatas) =>
       checkoutItemDatas.fold(0, (p, e) => p + _hargaTotalCheckoutItem(e));
 
@@ -121,20 +119,13 @@ class _TransactionHistoryDetailPageState
   }
 
   Widget _body() {
-    var idOrder = checkoutHistoryItem.id;
-    var namaPembeli = _userData?.name ?? 'Mengambil data...';
-    var alamatPengiriman = _userData?.alamat ?? 'Mengambil data...';
     var metodePembayaran = CheckoutHistoryItem.paymentMethodToString(
       checkoutHistoryItem.paymentMethod,
     );
 
-    var noVA = '(${CheckoutHistoryItem.bankToString(
-      checkoutHistoryItem.bank,
-    )!}) ${checkoutHistoryItem.noVirtualAccount}';
-
-    var status = CheckoutHistoryItem.statusToString(
-      checkoutHistoryItem.status,
-    ).replaceAll('_', ' ');
+    var status = CheckoutHistoryItem.statusToString(checkoutHistoryItem.status);
+    var bank = CheckoutHistoryItem.bankToString(checkoutHistoryItem.bank);
+    var noVA = checkoutHistoryItem.noVirtualAccount;
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -162,7 +153,7 @@ class _TransactionHistoryDetailPageState
                     ),
                   ),
                   Text(
-                    idOrder!,
+                    checkoutHistoryItem.id!,
                     style: TextStyle(
                       color: Colors.blue,
                       fontSize: 18,
@@ -172,59 +163,83 @@ class _TransactionHistoryDetailPageState
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                bottom: 10.0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    'Nama Pembeli:',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 18,
-                      // fontWeight: FontWeight.bold,
+            FutureBuilder<UserData>(
+              future: _getUserData(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasData) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 10.0,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                'Nama Pembeli:',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 18,
+                                  // fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                snapshot.data!.name,
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  // fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 10.0,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                'Alamat Pengiriman: ',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 18,
+                                  // fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                snapshot.data!.alamat,
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  // fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+
+                  return Center(
+                    child: Text(
+                      'Something Is Wrong',
                     ),
-                  ),
-                  Text(
-                    namaPembeli,
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      // fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                bottom: 10.0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    'Alamat Pengiriman: ',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 18,
-                      // fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    alamatPengiriman,
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      // fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
+                  );
+                }
+
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
             ),
             Text(
               'Item Pesanan',
@@ -325,35 +340,38 @@ class _TransactionHistoryDetailPageState
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 10.0,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Text(
-                    'No. Virtual Account: ',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 18,
-                      // fontWeight: FontWeight.bold,
+            if (checkoutHistoryItem.paymentMethod ==
+                PaymentMethod.VirtualAccount) ...<Widget>[
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 10.0,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Text(
+                      'No. Virtual Account: ',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 18,
+                        // fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    noVA,
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      // fontWeight: FontWeight.bold,
+                    Text(
+                      '$bank $noVA',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        // fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.fade,
                     ),
-                    maxLines: 3,
-                    overflow: TextOverflow.fade,
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+            ],
             Padding(
               padding: const EdgeInsets.only(
                 top: 10.0,
