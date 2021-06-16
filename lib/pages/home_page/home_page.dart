@@ -1,5 +1,6 @@
 import 'package:bakti_karya/components/shopping_cart_button.dart';
 import 'package:bakti_karya/firebase.dart';
+import 'package:bakti_karya/models/Product.dart';
 import 'package:bakti_karya/models/PromoBanner.dart';
 import 'package:bakti_karya/models/RecipeBanner.dart';
 import 'package:bakti_karya/models/UserData.dart';
@@ -96,12 +97,39 @@ class _HomePageState extends State<HomePage> {
   Future<List<RecipeBanner>> _getResepBanner() async {
     List<RecipeBanner> bannerList = [];
     // * uncomment line dibawah ini (buat hemat limit kuota firebase, sudah bisa)
-    // var query = firestore.collection('/resep_banners');
+    var query = firestore.collection('/resep_banners');
 
-    // bannerList = await query.get().then(
-    //     (col) => col.docs.map((e) => RecipeBanner.fromJSON(e.data())).toList());
+    bannerList = await query.get().then(
+          (col) => col.docs
+              .map(
+                (e) => RecipeBanner.fromJSON(e.data()),
+              )
+              .toList(),
+        );
 
     return bannerList;
+  }
+
+  Future<void> _fetchProductAndNavigate(String productId) async {
+    var query = firestore.collection('/products').doc(productId);
+
+    await query
+        .get()
+        .then((doc) => Product.fromJSON(
+              <String, dynamic>{
+                'id': doc.id,
+                ...doc.data()!,
+              },
+            ))
+        .then((product) {
+      Navigator.pushNamed(
+        context,
+        '/product_detail',
+        arguments: <String, dynamic>{
+          'product': product,
+        },
+      );
+    });
   }
 
   Future<UserData> _fetchUserData() {
@@ -769,36 +797,40 @@ class _HomePageState extends State<HomePage> {
                       items: snapshot.data!.map((rb) {
                         return Builder(
                           builder: (BuildContext context) {
-                            return Container(
-                              width: MediaQuery.of(context).size.width,
-                              margin: EdgeInsets.symmetric(
-                                horizontal: 5.0,
-                                vertical: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                border: Border.all(
-                                  color: Colors.blue,
+                            return GestureDetector(
+                              onTap: () =>
+                                  _fetchProductAndNavigate(rb.productId),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                margin: EdgeInsets.symmetric(
+                                  horizontal: 5.0,
+                                  vertical: 10,
                                 ),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                    10.0,
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  border: Border.all(
+                                    color: Colors.blue,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(
+                                      10.0,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                    10,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(
+                                      10,
+                                    ),
                                   ),
-                                ),
-                                child: CachedNetworkImage(
-                                  imageUrl: rb.url,
-                                  placeholder: (_, __) => Align(
-                                    alignment: Alignment.center,
-                                    child: CircularProgressIndicator(),
+                                  child: CachedNetworkImage(
+                                    imageUrl: rb.url,
+                                    placeholder: (_, __) => Align(
+                                      alignment: Alignment.center,
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                    fit: BoxFit.cover,
                                   ),
-                                  fit: BoxFit.cover,
                                 ),
                               ),
                             );
