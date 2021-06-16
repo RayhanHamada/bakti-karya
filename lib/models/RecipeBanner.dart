@@ -6,7 +6,10 @@ class RecipeBanner {
   });
 
   factory RecipeBanner.fromJSON(Map<String, dynamic> map) => RecipeBanner(
-      name: map['name'], productId: map['product_id'], url: map['url']);
+        name: map['name'],
+        productId: map['product_id'],
+        url: map['url'],
+      );
 
   final String name, productId, url;
 }
