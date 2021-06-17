@@ -4,12 +4,12 @@ import 'package:bakti_karya/pages/checkout_page/checkout_page.dart';
 import 'package:bakti_karya/pages/confirmation_page/confirmation_page.dart';
 import 'package:bakti_karya/pages/home_page/home_page.dart';
 import 'package:bakti_karya/pages/login_page/login_page.dart';
-import 'package:bakti_karya/pages/me_page/me_page.dart';
 import 'package:bakti_karya/pages/order_histories_page/order_histories_page.dart';
 import 'package:bakti_karya/pages/order_history_detail_page/order_history_detail_page.dart';
 import 'package:bakti_karya/pages/payment_method_page/payment_method_page.dart';
 import 'package:bakti_karya/pages/product_detail_page/product_detail_page.dart';
 import 'package:bakti_karya/pages/product_list_page/product_list_page.dart';
+import 'package:bakti_karya/pages/profile_page/profile_page.dart';
 import 'package:bakti_karya/pages/register_page/register_page.dart';
 import 'package:bakti_karya/pages/splashscreen_page/splashscreen_page.dart';
 import 'package:bakti_karya/pages/success_buy_page/success_buy_page.dart';
@@ -36,7 +36,7 @@ Route? onGenerateRoute(RouteSettings settings) {
       );
     case '/profile_page':
       return MaterialPageRoute(
-        builder: (_) => MePage(),
+        builder: (_) => ProfilePage(),
       );
     case '/product_list_page':
       var args = (settings.arguments as Map<String, dynamic>);

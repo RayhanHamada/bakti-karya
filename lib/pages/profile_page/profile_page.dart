@@ -2,12 +2,12 @@ import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/models/UserData.dart';
 import 'package:flutter/material.dart';
 
-class MePage extends StatefulWidget {
+class ProfilePage extends StatefulWidget {
   @override
-  _MePageState createState() => _MePageState();
+  _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _MePageState extends State<MePage> {
+class _ProfilePageState extends State<ProfilePage> {
   var _nameTextController = TextEditingController();
   var _emailTextController = TextEditingController();
   var _alamatTextController = TextEditingController();
