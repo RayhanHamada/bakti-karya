@@ -3,14 +3,14 @@ import 'package:bakti_karya/models/CheckoutHistoryItem.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class TransactionHistoryPage extends StatefulWidget {
-  const TransactionHistoryPage({Key? key}) : super(key: key);
+class OrderHistoriesPage extends StatefulWidget {
+  const OrderHistoriesPage({Key? key}) : super(key: key);
 
   @override
-  _TransactionHistoryPageState createState() => _TransactionHistoryPageState();
+  _OrderHistoriesPageState createState() => _OrderHistoriesPageState();
 }
 
-class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
+class _OrderHistoriesPageState extends State<OrderHistoriesPage> {
   Future<List<CheckoutHistoryItem>> _getCheckoutHistoryItems() async {
     var email = fireAuth.currentUser!.email;
     var query = firestore.collection('/users').where(
@@ -49,7 +49,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
   void _navigateToHistoryDetailPage(CheckoutHistoryItem checkoutHistoryItem) {
     Navigator.pushNamed(
       context,
-      '/transaction_history_detail_page',
+      '/order_history_detail_page',
       arguments: <String, dynamic>{
         'checkoutHistoryItem': checkoutHistoryItem,
       },

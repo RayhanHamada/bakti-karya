@@ -50,7 +50,7 @@ class _ProductTileState extends State<ProductTile> {
   void _navigateToProductDetailPage(Product product) {
     Navigator.pushNamed(
       context,
-      '/product_detail',
+      '/product_detail_page',
       arguments: <String, dynamic>{
         'product': product,
       },

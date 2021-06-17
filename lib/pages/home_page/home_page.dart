@@ -29,24 +29,26 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _navigateToMePage() {
-    Navigator.pushNamed(context, '/me');
+    Navigator.pushNamed(context, '/profile_page');
   }
 
   void _navigateToProductListPage(
     KategoriProductListPage kategoriProduk,
   ) {
-    Navigator.pushNamed(context, '/productlist', arguments: <String, dynamic>{
-      'kategoriProduk': kategoriProduk,
-    }).then((_) => setState(() {}));
+    Navigator.pushNamed(context, '/product_list_page',
+        arguments: <String, dynamic>{
+          'kategoriProduk': kategoriProduk,
+        }).then((_) => setState(() {}));
   }
 
   void _navigateToProductListPageWithPop(
     KategoriProductListPage kategoriProduk,
   ) {
     Navigator.pop(context);
-    Navigator.pushNamed(context, '/productlist', arguments: <String, dynamic>{
-      'kategoriProduk': kategoriProduk,
-    }).then((_) => setState(() {}));
+    Navigator.pushNamed(context, '/product_list_page',
+        arguments: <String, dynamic>{
+          'kategoriProduk': kategoriProduk,
+        }).then((_) => setState(() {}));
   }
 
   void _navigateToCheckoutPage() {
@@ -54,7 +56,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _navigateToTransactionHistory() {
-    Navigator.pushNamed(context, '/transaction_history_page');
+    Navigator.pushNamed(context, '/order_histories_page');
   }
 
   void _logout() async {
@@ -69,7 +71,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () async {
               await fireAuth.signOut().then((_) {
                 Navigator.pop(context);
-                Navigator.pushReplacementNamed(context, '/login');
+                Navigator.pushReplacementNamed(context, '/login_page');
               });
             },
           ),
@@ -124,7 +126,7 @@ class _HomePageState extends State<HomePage> {
         .then((product) {
       Navigator.pushNamed(
         context,
-        '/product_detail',
+        '/product_detail_page',
         arguments: <String, dynamic>{
           'product': product,
         },

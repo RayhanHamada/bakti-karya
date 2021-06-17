@@ -5,47 +5,47 @@ import 'package:bakti_karya/pages/confirmation_page/confirmation_page.dart';
 import 'package:bakti_karya/pages/home_page/home_page.dart';
 import 'package:bakti_karya/pages/login_page/login_page.dart';
 import 'package:bakti_karya/pages/me_page/me_page.dart';
+import 'package:bakti_karya/pages/order_histories_page/order_histories_page.dart';
+import 'package:bakti_karya/pages/order_history_detail_page/order_history_detail_page.dart';
 import 'package:bakti_karya/pages/payment_method_page/payment_method_page.dart';
 import 'package:bakti_karya/pages/product_detail_page/product_detail_page.dart';
 import 'package:bakti_karya/pages/product_list_page/product_list_page.dart';
 import 'package:bakti_karya/pages/register_page/register_page.dart';
 import 'package:bakti_karya/pages/splashscreen_page/splashscreen_page.dart';
 import 'package:bakti_karya/pages/success_buy_page/success_buy_page.dart';
-import 'package:bakti_karya/pages/transaction_history_detail_page/transaction_history_detail_page.dart';
-import 'package:bakti_karya/pages/transaction_history_page/transaction_history_page.dart';
 import 'package:bakti_karya/utils.dart';
 import 'package:flutter/material.dart';
 
 Route? onGenerateRoute(RouteSettings settings) {
   switch (settings.name) {
-    case '/splash':
+    case '/splash_page':
       return MaterialPageRoute(
         builder: (_) => SplashScreenPage(),
       );
-    case '/login':
+    case '/login_page':
       return MaterialPageRoute(
         builder: (_) => LoginPage(),
       );
-    case '/register':
+    case '/register_page':
       return MaterialPageRoute(
         builder: (_) => RegisterPage(),
       );
-    case '/home':
+    case '/home_page':
       return MaterialPageRoute(
         builder: (_) => HomePage(),
       );
-    case '/me':
+    case '/profile_page':
       return MaterialPageRoute(
         builder: (_) => MePage(),
       );
-    case '/productlist':
+    case '/product_list_page':
       var args = (settings.arguments as Map<String, dynamic>);
       var kategoriProduk = args['kategoriProduk'] as KategoriProductListPage;
       return MaterialPageRoute(
         builder: (_) =>
             ProductListPage(initialKategoriProductListPage: kategoriProduk),
       );
-    case '/product_detail':
+    case '/product_detail_page':
       var product = ((settings.arguments) as Map<String, dynamic>)['product'];
       return MaterialPageRoute(
         builder: (_) => ProductDetailPage(product: product),
@@ -77,17 +77,17 @@ Route? onGenerateRoute(RouteSettings settings) {
         ),
       );
 
-    case '/transaction_history_page':
+    case '/order_histories_page':
       return MaterialPageRoute(
-        builder: (_) => TransactionHistoryPage(),
+        builder: (_) => OrderHistoriesPage(),
       );
 
-    case '/transaction_history_detail_page':
+    case '/order_history_detail_page':
       var args = (settings.arguments as Map<String, dynamic>);
       var checkoutHistoryItem =
           args['checkoutHistoryItem'] as CheckoutHistoryItem;
       return MaterialPageRoute(
-        builder: (_) => TransactionHistoryDetailPage(
+        builder: (_) => OrderHistoryDetailPage(
           checkoutHistoryItem: checkoutHistoryItem,
         ),
       );

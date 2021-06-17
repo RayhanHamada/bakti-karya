@@ -17,11 +17,11 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
 
   void _authenticate() {
     if (fireAuth.currentUser != null) {
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/home_page');
       return;
     }
 
-    Navigator.pushReplacementNamed(context, '/login');
+    Navigator.pushReplacementNamed(context, '/login_page');
   }
 
   @override

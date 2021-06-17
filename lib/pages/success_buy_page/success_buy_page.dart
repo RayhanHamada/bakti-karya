@@ -28,7 +28,7 @@ class _SuccessBuyPageState extends State<SuccessBuyPage> {
   final String checkoutHistoryItemId;
 
   void _goToHomePage() {
-    Navigator.pushReplacementNamed(context, '/home');
+    Navigator.pushReplacementNamed(context, '/home_page');
   }
 
   void _copyToClipBoard(String content) {

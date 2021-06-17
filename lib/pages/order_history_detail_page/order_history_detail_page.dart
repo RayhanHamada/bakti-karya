@@ -7,8 +7,8 @@ import 'package:bakti_karya/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class TransactionHistoryDetailPage extends StatefulWidget {
-  const TransactionHistoryDetailPage({
+class OrderHistoryDetailPage extends StatefulWidget {
+  const OrderHistoryDetailPage({
     Key? key,
     required this.checkoutHistoryItem,
   }) : super(key: key);
@@ -16,15 +16,13 @@ class TransactionHistoryDetailPage extends StatefulWidget {
   final CheckoutHistoryItem checkoutHistoryItem;
 
   @override
-  _TransactionHistoryDetailPageState createState() =>
-      _TransactionHistoryDetailPageState(
+  _OrderHistoryDetailPageState createState() => _OrderHistoryDetailPageState(
         checkoutHistoryItem: checkoutHistoryItem,
       );
 }
 
-class _TransactionHistoryDetailPageState
-    extends State<TransactionHistoryDetailPage> {
-  _TransactionHistoryDetailPageState({required this.checkoutHistoryItem});
+class _OrderHistoryDetailPageState extends State<OrderHistoryDetailPage> {
+  _OrderHistoryDetailPageState({required this.checkoutHistoryItem});
 
   final CheckoutHistoryItem checkoutHistoryItem;
 

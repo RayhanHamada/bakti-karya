@@ -1,5 +1,4 @@
 import 'package:bakti_karya/firebase.dart';
-import 'package:bakti_karya/pages/register_page/register_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -52,11 +51,9 @@ class _LoginPageState extends State<LoginPage> {
     _emailTextController.text = '';
     _passwordTextController.text = '';
 
-    Navigator.push(
+    Navigator.pushNamed(
       context,
-      MaterialPageRoute(
-        builder: (context) => RegisterPage(),
-      ),
+      '/register_page',
     );
   }
 
@@ -101,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (fireAuth.currentUser != null) {
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/home_page');
       }
     }
   }
