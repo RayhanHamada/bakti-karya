@@ -198,9 +198,9 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       CircleAvatar(
-                        foregroundImage: AssetImage(
-                          'assets/logo.png',
-                        ),
+                        child: snapshot.data?.photoURL != null
+                            ? Image.network(snapshot.data!.photoURL!)
+                            : Image.asset('assets/logo.png'),
                         radius: 40.0,
                       ),
                       Text(
