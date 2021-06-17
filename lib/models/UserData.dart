@@ -8,6 +8,7 @@ class UserData {
     required this.name,
     required this.noHp,
     required this.alamat,
+    this.photoURL,
   });
 
   factory UserData.fromJSON(Map<String, dynamic> map) => UserData(
@@ -16,6 +17,7 @@ class UserData {
         name: map['name'],
         noHp: map['no_hp'],
         alamat: map['alamat'],
+        photoURL: map['photo_url'],
       )..checkoutItems = (map['current_checkout_items'] as List<dynamic>)
           .map((e) => CheckoutItem.fromJSON(e))
           .toList();
@@ -25,6 +27,7 @@ class UserData {
   String name;
   String noHp;
   String alamat;
+  String? photoURL;
   List<CheckoutItem> checkoutItems = [];
 
   Map<String, dynamic> toJSON() {
@@ -34,6 +37,7 @@ class UserData {
       'no_hp': this.noHp,
       'alamat': this.alamat,
       'current_checkout_items': checkoutItems,
+      'photo_url': photoURL,
     };
   }
 
@@ -45,6 +49,7 @@ class UserData {
       'no_hp': this.noHp,
       'alamat': this.alamat,
       'current_checkout_items': [],
+      'photo_url': null,
     };
   }
 }

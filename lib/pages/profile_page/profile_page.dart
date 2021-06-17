@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:bakti_karya/firebase.dart';
 import 'package:bakti_karya/models/UserData.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -15,6 +18,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   var _isLoading = false;
   var _loadingMsg = '';
+  var _picker = ImagePicker();
+  UserData? _user;
 
   Future<void> _populateForm() async {
     var email = fireAuth.currentUser!.email!;
@@ -26,23 +31,29 @@ class _ProfilePageState extends State<ProfilePage> {
           isEqualTo: email,
         )
         .get()
-        .then((snapshot) {
-      var user = UserData.fromJSON(snapshot.docs[0].data());
+        .then((col) => col.docs.first)
+        .then((doc) {
+      _user = UserData.fromJSON({
+        'id': doc.id,
+        ...doc.data(),
+      });
 
       setState(() {
-        _nameTextController.text = user.name;
+        _nameTextController.text = _user!.name;
         _emailTextController.text = email;
-        _alamatTextController.text = user.alamat;
-        _noHpTextController.text = user.noHp;
+        _alamatTextController.text = _user!.alamat;
+        _noHpTextController.text = _user!.noHp;
       });
     });
   }
 
   Future<void> _updateAndSave() async {
-    setState(() {
-      _isLoading = true;
-      _loadingMsg = 'Updating data, please wait...';
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = true;
+        _loadingMsg = 'Updating data, please wait...';
+      });
+    }
 
     await firestore
         .collection('/users')
@@ -52,30 +63,115 @@ class _ProfilePageState extends State<ProfilePage> {
         )
         .get()
         .then((col) async {
-      var userData = UserData(
-        name: _nameTextController.text,
-        email: _emailTextController.text,
-        alamat: _alamatTextController.text,
-        noHp: _noHpTextController.text,
-      );
+      _user!.name = _nameTextController.text;
+      _user!.alamat = _alamatTextController.text;
+      _user!.noHp = _noHpTextController.text;
 
-      await col.docs[0].reference.update(userData.toJSON()).then((_) {
-        setState(() {
-          _loadingMsg = 'Success !';
-        });
+      await col.docs.first.reference.update(_user!.toJSON()).then((_) {
+        if (mounted) {
+          setState(() {
+            _loadingMsg = 'Success !';
+          });
+        }
       }).onError((error, stackTrace) {
-        setState(() {
-          _loadingMsg = 'Update failed !';
-        });
+        if (mounted) {
+          setState(() {
+            _loadingMsg = 'Update failed !';
+          });
+        }
       });
 
-      await Future.delayed(Duration(seconds: 2), () {
-        setState(() {
-          _isLoading = false;
-          _loadingMsg = '';
-        });
-      });
+      await Future.delayed(
+        Duration(seconds: 2),
+        () {
+          if (mounted) {
+            setState(() {
+              _isLoading = false;
+              _loadingMsg = '';
+            });
+          }
+        },
+      );
     });
+  }
+
+  Future<void> _pickPhoto(BuildContext context) async {
+    var pickedFile = await _picker.getImage(
+      source: ImageSource.gallery,
+    );
+
+    if (pickedFile == null) return;
+
+    var pickedImage = File(pickedFile.path);
+
+    await showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text('Upload Profile Picture'),
+        content: Text('Are you sure ?'),
+        actions: [
+          TextButton(
+            child: Text('No'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          TextButton(
+            child: Text('Yes'),
+            onPressed: () async {
+              Navigator.pop(context);
+
+              setState(() {
+                _isLoading = true;
+                _loadingMsg = 'Uploading Profile Pic...';
+              });
+
+              /// ambil data user
+
+              var ref = firestorage
+                  .refFromURL('gs://bakti-karya.appspot.com/user_photos');
+
+              /// upload file ke firebase storage
+              await ref
+                  .child(_user!.id!)
+                  .putFile(pickedImage)
+                  .then((taskSnapshot) async {
+                var photoURL = await taskSnapshot.ref.getDownloadURL();
+
+                var doc =
+                    await firestore.collection('/users').doc(_user!.id).get();
+
+                /// update di collection users url fotonya
+                await doc.reference.update({
+                  'photo_url': photoURL,
+                }).then((_) {
+                  /// jika sukses tulis di layar 'sukses'
+                  setState(() {
+                    _loadingMsg = 'Success...';
+                  });
+                });
+              }).catchError((_) {
+                /// kalo nggak sukses
+                setState(() {
+                  _loadingMsg = 'Failed Uploading Profile Picture...';
+                });
+              });
+
+              /// setelah kelar baru hapus loading screen
+              await Future.delayed(
+                Duration(seconds: 1),
+                () {
+                  setState(() {
+                    _isLoading = false;
+                    _loadingMsg = '';
+                  });
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -93,9 +189,11 @@ class _ProfilePageState extends State<ProfilePage> {
           icon: Icon(
             Icons.arrow_back_ios_new_outlined,
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: _isLoading
+              ? null
+              : () {
+                  Navigator.pop(context);
+                },
         ),
         title: Text(
           'Profile',
@@ -125,27 +223,30 @@ class _ProfilePageState extends State<ProfilePage> {
                           Container(
                             width: 70.0,
                             height: 70.0,
-                            child: Stack(
-                              children: <Widget>[
-                                Opacity(
-                                  opacity: 0.5,
-                                  child: CircleAvatar(
-                                    foregroundImage: AssetImage(
-                                      'assets/logo.png',
-                                    ),
-                                    radius: 40,
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Opacity(
-                                    opacity: 0.7,
-                                    child: Icon(
-                                      Icons.edit,
+                            child: GestureDetector(
+                              onTap: () => _pickPhoto(context),
+                              child: Stack(
+                                children: <Widget>[
+                                  Opacity(
+                                    opacity: 0.5,
+                                    child: CircleAvatar(
+                                      child: _user?.photoURL != null
+                                          ? Image.network(_user!.photoURL!)
+                                          : Image.asset('assets/logo.png'),
+                                      radius: 40,
                                     ),
                                   ),
-                                ),
-                              ],
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: Opacity(
+                                      opacity: 0.7,
+                                      child: Icon(
+                                        Icons.edit,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
 
