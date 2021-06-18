@@ -387,7 +387,7 @@ class _OrderHistoryDetailPageState extends State<OrderHistoryDetailPage> {
                     ),
                   ),
                   Text(
-                    status,
+                    status.replaceFirst('_', ' '),
                     style: TextStyle(
                       color: Colors.blue,
                       fontSize: 18,
