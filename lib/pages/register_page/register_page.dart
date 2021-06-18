@@ -73,11 +73,11 @@ class _RegisterPageState extends State<RegisterPage> {
     }
 
     var passwordRegex = RegExp(
-      r'(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})',
+      r'(?=.{6,})',
     );
 
     if (!passwordRegex.hasMatch(password)) {
-      return 'Password must at least 8 characters long, contains at least 1 small alphabet, 1 capital alphabet, and 1 number';
+      return 'Password must at least 6 characters long';
     }
 
     return null;
